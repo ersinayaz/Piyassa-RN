@@ -54,6 +54,7 @@ function App(): JSX.Element {
     return (
       <HomeStack.Navigator screenOptions={({ navigation, route }) => ({
         headerShown: false,
+        animationEnabled: false,
       })}>
         <HomeStack.Screen name="Home" component={HomeScreen} />
         <HomeStack.Screen name="ParityDetail" component={ParityDetailScreen} />
