@@ -2,7 +2,7 @@ import i18n from '../i18n/_i18n';
 
 export type MinimalParity = {
     id: string;
-    lastPrice?: number | null;
+    price?: number | null;
 }
 
 export type Parity = MinimalParity & {
@@ -15,7 +15,6 @@ export type Parity = MinimalParity & {
 
     priceColor?: string | null;
     closingPrice?: number | null;
-    changeRate?: ParityChangeRate | null;
 }
 
 export type ParityChangeRate = {
