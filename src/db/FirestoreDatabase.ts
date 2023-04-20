@@ -80,6 +80,15 @@ export class FirestoreDatabase<T> {
         });
     }
 
+    async onChangeById(id: string, callback: (data: T) => void): Promise<() => void> {
+        return await firestore().collection(this.collectionName).doc(id).onSnapshot((snapshot) => {
+            if (snapshot.exists) {
+
+                callback(snapshot.data());
+            }
+        });
+    }
+
     async onCreated(callback: (id: string, data: T) => void): Promise<() => void> {
         return await firestore().collection(this.collectionName).orderBy('createdAt').startAt(Date.now()).onSnapshot((snapshot) => {
             snapshot.docChanges().forEach((change) => {
