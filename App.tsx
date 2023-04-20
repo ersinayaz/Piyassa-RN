@@ -13,9 +13,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // Screens
-import HomeScreen from './src/screens/HomeScreen';
 import TextArea from './src/components/TextArea';
+import HomeScreen from './src/screens/HomeScreen';
 import SplashScreen from './src/screens/SplashScreen';
+import ParityDetailScreen from './src/screens/ParityDetailScreen';
 
 const MainStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -55,6 +56,7 @@ function App(): JSX.Element {
         headerShown: false,
       })}>
         <HomeStack.Screen name="Home" component={HomeScreen} />
+        <HomeStack.Screen name="ParityDetail" component={ParityDetailScreen} />
       </HomeStack.Navigator>
     )
   }
