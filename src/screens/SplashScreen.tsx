@@ -36,9 +36,11 @@ const SplashScreen = observer(({ navigation }) => {
     const firebaseData = await parities.toList();
 
     return Parities.map(p => {
+      const dbData = firebaseData.find(f => f.id === p.id);
       return {
         ...p,
-        closingPrice: firebaseData.find(f => f.id === p.id)?.closingPrice,
+        price: dbData?.price,
+        closingPrice: dbData?.closingPrice,
       }
     });
   }
