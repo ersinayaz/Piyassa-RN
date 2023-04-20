@@ -52,7 +52,7 @@ const SplashScreen = observer(({ navigation }) => {
       deviceStore.setParities(initialData.parities);
 
 
-      navigation.navigate("Tab");
+      navigation.replace("Tab");
       // navigation.navigate('TextArea', {
       //   maxLength: 500,
       //   minLength: 10,
