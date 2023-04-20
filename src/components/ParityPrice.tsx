@@ -1,8 +1,8 @@
 import { useStore } from '../store';
 import { useFirestore } from '../db';
 import { color } from '../assets/colors';
+import React, { useState, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 interface ParityPriceProps {
