@@ -25,14 +25,6 @@ const Tab = createBottomTabNavigator();
 function App(): JSX.Element {
   LogBox.ignoreAllLogs();
 
-  const MainStackOptions = {
-    headerLeft: () => <></>,
-    headerLeftLabelVisible: false,
-    headerStyle: { backgroundColor: color('color2'), shadowOpacity: 0, elevation: 0, borderBottomWidth: 0, shadowColor: 'transparent' },
-    headerTitleContainerStyle: styles.headerTitleContainerStyle,
-    headerTitle: (props) => <Image style={styles.headerLogo} source={require('./src/assets/images/logo/header-default.png')} />
-  };
-
   const TabNavigator = () => {
     return (
       <Tab.Navigator screenOptions={({ navigation, route }) => ({
@@ -53,8 +45,14 @@ function App(): JSX.Element {
   const HomeStackNavigator = () => {
     return (
       <HomeStack.Navigator screenOptions={({ navigation, route }) => ({
-        headerShown: false,
         animationEnabled: false,
+        safeAreaInsets: { top: 0 },
+        title: i18n.t("route_" + route.name),
+        headerStyle: { backgroundColor: color('color2'), shadowOpacity: 0, elevation: 0, borderBottomWidth: 0, shadowColor: 'transparent' },
+        headerTitleContainerStyle: styles.headerTitleContainerStyle,
+        headerLeftContainerStyle: { zIndex:2 },
+        headerRightContainerStyle: { zIndex:2 },
+        headerTitle: (props) => <Image style={styles.headerLogo} source={require('./src/assets/images/logo/header-default.png')} />,
       })}>
         <HomeStack.Screen name="Home" component={HomeScreen} />
         <HomeStack.Screen name="ParityDetail" component={ParityDetailScreen} />
@@ -77,7 +75,7 @@ function App(): JSX.Element {
       <StatusBar barStyle='light-content' />
       <FirebaseProvider>
         <StoreProvider>
-          <MainStack.Navigator initialRouteName='Splash' screenOptions={({ navigation, route }) => (MainStackOptions)}>
+          <MainStack.Navigator initialRouteName='Splash' screenOptions={({ navigation, route }) => ({ headerShown: false })}>
             <MainStack.Screen name="Splash" component={SplashScreen} options={{ animationEnabled: false, headerShown: false }} />
             <MainStack.Screen name="Tab" component={TabNavigator} options={{ animationEnabled: true, presentation: "transparentModal" }} />
             <MainStack.Screen name="TextArea" component={TextArea} options={{ headerShown: false, animationEnabled: true, presentation: "modal", gestureEnabled: true }} />
@@ -94,7 +92,7 @@ export default App;
 const styles = StyleSheet.create({
   headerTitleContainerStyle: {
     left: 0,
-    width: '100%',
+    maxWidth: '50%',
     alignItems: 'center',
   },
   headerLogo: {
