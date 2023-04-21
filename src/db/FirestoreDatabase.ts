@@ -98,6 +98,23 @@ export class FirestoreDatabase<T> {
             });
         });
     }
+
+    async getComments(id: string, lastRecordCreatedAt: number | null): Promise<T[]> {
+        const snapshot = await firestore().collection(this.collectionName)
+            .where('parity.id', '==', id)
+            .orderBy('createdAt', 'desc')
+            .limit(10)
+            .startAfter(lastRecordCreatedAt ? lastRecordCreatedAt : Date.now())
+            .get();
+        const result: T[] = [];
+
+        snapshot.forEach((childSnapshot) => {
+            const childData = childSnapshot.data();
+            result.push(childData);
+        });
+
+        return result;
+    }
 }
 
 export const users = new FirestoreDatabase<User>("users");
