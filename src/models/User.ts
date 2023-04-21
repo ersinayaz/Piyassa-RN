@@ -2,10 +2,10 @@ export type MinimalUser = {
     id: string;
     name: string;
     email: string;
+    imageUri?: string;
 }
 
 export type User = MinimalUser & {
-    imageUri?: string;
     providers: string[];
     lastProvider: string;
     notificationToken?: string;

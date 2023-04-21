@@ -52,8 +52,8 @@ const TextArea = ({ navigation, route }) => {
                 <View style={styles.newCommentView}>
                     <View style={styles.imageView}>
                         {
-                            userStore.me?.photo ?
-                                <Image source={{ uri: userStore.me.photo }} style={styles.profilePicture} />
+                            userStore.me?.imageUri ?
+                                <Image source={{ uri: userStore.me.imageUri }} style={styles.profilePicture} />
                                 :
                                 <Image style={styles.profilePicture} source={require('../assets/images/user/default.png')} />
                         }
