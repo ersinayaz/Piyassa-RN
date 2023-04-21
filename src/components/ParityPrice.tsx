@@ -71,7 +71,9 @@ const ParityPrice = (props: ParityPriceProps) => {
         });
 
         return () => {
-            unsubscribe();
+            try {
+                unsubscribe();
+            } catch { }
         };
     }, [props.data.id, parities]);
 
