@@ -5,12 +5,13 @@ import UserModal from './UserModal';
 import { useStore } from '../store';
 import { useFirestore } from '../db';
 import { color } from '../assets/colors';
+import FeedbackModal from './FeedbackModal';
 import ParityCard from '../components/ParityCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, { useState, useEffect, useRef } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import BottomDrawer, { BottomDrawerMethods } from 'react-native-animated-bottom-drawer';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActionSheetIOS } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActionSheetIOS, Share } from 'react-native';
 
 moment.locale('tr');
 
@@ -22,8 +23,10 @@ interface CommentItemProps {
 
 const CommentItem = (props: CommentItemProps) => {
     const { data, navigation, parity } = props;
-    const bottomDrawerRef = useRef<BottomDrawerMethods>(null);
+    const userModalRef = useRef<BottomDrawerMethods>(null);
+    const feedbackModalRef = useRef<BottomDrawerMethods>(null);
     const { userStore } = useStore();
+    const { reports } = useFirestore();
 
 
     const showAction = () => {
@@ -37,12 +40,45 @@ const CommentItem = (props: CommentItemProps) => {
                 options: ['Vazgeç', 'Gönderiyi Beğen', 'Gönderiyi Paylaş', 'Şikayet Et'],
             },
             buttonIndex => {
-                if (buttonIndex === 0) {
-                } else if (buttonIndex === 1) {
-                } else if (buttonIndex === 2) {
+                switch (buttonIndex) {
+                    case 0: break;
+                    case 1: likeOrUnlike(); break;
+                    case 2: share(); break;
+                    case 3: report(); break;
                 }
             },
         );
+    }
+
+    const report = async () => {
+        const report = await reports.create({
+            status: 'pending',
+            commentId: data.id,
+            userId: userStore.me?.id,
+        });
+        feedbackModalRef.current.open();
+    }
+
+    const share = async () => {
+        try {
+            const result = await Share.share({
+                message: data.body.toString(),
+                title: parity.name,
+                subject: parity.description,
+                dialogTitle: parity.name
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
     const likeOrUnlike = () => {
@@ -52,11 +88,11 @@ const CommentItem = (props: CommentItemProps) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => { bottomDrawerRef.current.open() }}>
+                <TouchableOpacity onPress={() => { userModalRef.current.open() }}>
                     <Image style={styles.userImage} source={{ uri: data.user.imageUri }} />
                 </TouchableOpacity>
                 <View style={styles.headerCenter}>
-                    <TouchableOpacity onPress={() => { bottomDrawerRef.current.open() }}>
+                    <TouchableOpacity onPress={() => { userModalRef.current.open() }}>
                         <Text style={styles.userName}>{data.user.name}</Text>
                     </TouchableOpacity>
                     <Text style={styles.timeAgo}>{moment(data.createdAt).fromNow()}</Text>
@@ -77,9 +113,14 @@ const CommentItem = (props: CommentItemProps) => {
                 </TouchableOpacity>
             </View>
 
-            <BottomDrawer ref={bottomDrawerRef} initialHeight={150} openDuration={250} closeDuration={100} >
-                <UserModal navigation={navigation} parity={parity} user={data.user} modalRef={bottomDrawerRef} />
+            <BottomDrawer ref={userModalRef} initialHeight={150} openDuration={250} closeDuration={100}>
+                <UserModal navigation={navigation} parity={parity} user={data.user} modalRef={userModalRef} />
             </BottomDrawer>
+
+            <BottomDrawer ref={feedbackModalRef} initialHeight={350}>
+                <FeedbackModal modalRef={feedbackModalRef} />
+            </BottomDrawer>
+
         </View>
     );
 };
