@@ -131,6 +131,24 @@ export class FirestoreDatabase<T> {
         return result;
     }
 
+    async checkUserExist(email: string): Promise<T> {
+        const snapshot = await firestore().collection(this.collectionName)
+            .where('email', '==', email)
+            .get();
+
+        const result: T[] = [];
+
+        snapshot.forEach((childSnapshot) => {
+            const childData = childSnapshot.data();
+            result.push(childData);
+        });
+
+        if(result.length > 0)
+            return result[0];
+        else
+        return null;
+    }
+
 }
 
 export const users = new FirestoreDatabase<User>("users");
