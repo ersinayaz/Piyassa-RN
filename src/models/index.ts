@@ -1,7 +1,8 @@
-import { User, MinimalUser, DeviceData } from './User';
 import { Comment } from './Comment';
-import { Parity, Parities, ParityChangeRate, MinimalParity } from './Parity';
+import { Reports } from './Reports';
 import { Relationship } from './Relationship';
+import { User, MinimalUser, DeviceData } from './User';
+import { Parity, Parities, ParityChangeRate, MinimalParity } from './Parity';
 
 export {
     User,
@@ -13,4 +14,5 @@ export {
     ParityChangeRate,
     MinimalParity,
     Relationship,
+    Reports
 };
