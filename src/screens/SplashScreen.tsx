@@ -81,8 +81,19 @@ const SplashScreen = observer(({ navigation }) => {
     }
   }, [initialData]);
 
+  const fetchPublicIp = async () => {
+    let controller = new AbortController()
+    setTimeout(() => controller.abort(), 1000);
+    const resp = await fetch('https://api64.ipify.org', { signal: controller.signal });
+    const text = await resp.text();
+    if (!resp.ok) {
+      throw new Error(`HTTP error! status: ${resp.status}`);
+    }
+    return text;
+  }
+
   const getIP = async () => {
-    const publicIP = await (await fetch('https://api64.ipify.org')).text();
+    const publicIP = await fetchPublicIp().catch(e => { return "" });
     const localIP = await DeviceInfo.getIpAddress().then(ip => { return ip });
 
     return { publicIP, localIP };
