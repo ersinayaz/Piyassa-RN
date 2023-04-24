@@ -123,7 +123,7 @@ const CommentItem = (props: CommentItemProps) => {
             <View style={styles.buttons}>
                 <TouchableOpacity onPress={likeOrUnlike} style={[styles.btnLike, isLiked ? styles.btnLiked : null]}>
                     <Ionicons name={isLiked ? "heart" : "heart-outline"} size={20} color={color(isLiked ? "color5" : "color3")} />
-                    <Text style={[styles.txtLikeCount, { color: color(isLiked ? "color5" : "color3") }]}>{data.likeCount}</Text>
+                    <Text style={[styles.txtLikeCount, { color: color(isLiked ? "color5" : "color3"), display: data.likeCount == 0 ? "none" : "flex" }]}>{data.likeCount}</Text>
                 </TouchableOpacity>
             </View>
 
