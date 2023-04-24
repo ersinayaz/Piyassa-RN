@@ -12,6 +12,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import BottomDrawer, { BottomDrawerMethods } from 'react-native-animated-bottom-drawer';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ActionSheetIOS, Share } from 'react-native';
+import { comments } from '../db/FirestoreDatabase';
 
 moment.locale('tr');
 
@@ -27,6 +28,7 @@ const CommentItem = (props: CommentItemProps) => {
     const feedbackModalRef = useRef<BottomDrawerMethods>(null);
     const { userStore } = useStore();
     const { reports } = useFirestore();
+    const [isLiked, setIsLiked] = useState(userStore.isLikedComment(data.id));
 
 
     const showAction = () => {
@@ -35,9 +37,9 @@ const CommentItem = (props: CommentItemProps) => {
                 cancelButtonIndex: 0,
                 destructiveButtonIndex: 3,
                 userInterfaceStyle: 'light',
-                title: 'Beğen & Paylaş & Şikayet Et',
-                message: 'Gönderiyi beğenmek, paylaşmak\nveya şikayet etmek mi istiyorsunuz?',
-                options: ['Vazgeç', 'Gönderiyi Beğen', 'Gönderiyi Paylaş', 'Şikayet Et'],
+                title: i18n.t("txt_cdm_commentActionTitle"),
+                message: i18n.t("txt_cdm_commentActionDescription"),
+                options: [i18n.t("btn_cancel"), !isLiked ? i18n.t("txt_cdm_commentLike") : i18n.t("txt_cdm_commentUnlike"), i18n.t("txt_cdm_commentShare"), i18n.t("txt_cdm_commentComplaint")],
             },
             buttonIndex => {
                 switch (buttonIndex) {
@@ -82,7 +84,19 @@ const CommentItem = (props: CommentItemProps) => {
     }
 
     const likeOrUnlike = () => {
-        alert("likeOrUnlike")
+        if (!userStore.me) return navigation.navigate('Login', { navigation, parity, from: "ParityDetail" });
+
+        if (isLiked) {
+            userStore.unlikeComment(data.id);
+            data.likeCount--;
+            setIsLiked(false);
+        } else {
+            userStore.likeComment(data.id);
+            data.likeCount++;
+            setIsLiked(true);
+        }
+
+        comments.update(data.id, { likeCount: data.likeCount });
     }
 
     return (
@@ -107,20 +121,18 @@ const CommentItem = (props: CommentItemProps) => {
                 <Text style={styles.txtBody}>{data.body}</Text>
             </View>
             <View style={styles.buttons}>
-                <TouchableOpacity onPress={likeOrUnlike} style={[styles.btnLike]}>
-                    <Ionicons name={"heart-outline"} size={20} color={color("color3")} />
-                    <Text style={styles.txtLikeCount}>{12}</Text>
+                <TouchableOpacity onPress={likeOrUnlike} style={[styles.btnLike, isLiked ? styles.btnLiked : null]}>
+                    <Ionicons name={isLiked ? "heart" : "heart-outline"} size={20} color={color(isLiked ? "color5" : "color3")} />
+                    <Text style={[styles.txtLikeCount, { color: color(isLiked ? "color5" : "color3") }]}>{data.likeCount}</Text>
                 </TouchableOpacity>
             </View>
 
             <BottomDrawer ref={userModalRef} initialHeight={150} openDuration={250} closeDuration={100}>
                 <UserModal navigation={navigation} parity={parity} user={data.user} modalRef={userModalRef} />
             </BottomDrawer>
-
             <BottomDrawer ref={feedbackModalRef} initialHeight={350}>
                 <FeedbackModal modalRef={feedbackModalRef} />
             </BottomDrawer>
-
         </View>
     );
 };
@@ -182,10 +194,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderColor: color("color3")
     },
+    btnLiked: {
+        backgroundColor: color("color3"),
+    },
     txtLikeCount: {
         fontSize: 14,
         marginLeft: 5,
-        fontWeight: "bold",
-        color: color("color3")
+        fontWeight: "bold"
     },
 });

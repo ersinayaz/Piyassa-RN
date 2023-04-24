@@ -41,6 +41,8 @@ const tr = {
     txt_cdm_commentQuotation: "Alıntı yaparak cevapla",
     txt_cdm_commentShare: "Gönderiyi paylaş",
     txt_cdm_commentComplaint: "Şikayet et",
+    txt_cdm_commentActionTitle: "Beğen & Paylaş & Şikayet Et",
+    txt_cdm_commentActionDescription: "Gönderiyi beğenmek, paylaşmak\nveya şikayet etmek mi istiyorsunuz?",
 
     // Page - New Comment :
     txt_newCommentPlaceholder: "Yorumunuzun içeriğinde hakaret, karalama, aşağılama, siyaset, saldırı, küfür vb. şeyler kesinlikle bulunmamalıdır.",

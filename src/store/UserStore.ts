@@ -6,26 +6,39 @@ import { observable, action, makeAutoObservable, runInAction } from 'mobx';
 export class UserStore {
   @observable me?: User;
   @observable followings: Relationship[] = [];
+  @observable likedComments: string[] = [];
 
   constructor() {
     makeAutoObservable(this, {
       me: observable,
       followings: observable,
+      likedComments: observable,
       setUser: action,
       initUser: action,
+      initlikedComments: action,
       logout: action,
       follow: action,
-
       setRelationships: action,
+      unFollow: action,
+      likeComment: action,
+      unlikeComment: action,
     });
 
     this.initUser();
+    this.initlikedComments();
   }
 
   @action async initUser() {
     const user = await AsyncStorage.getItem('user');
     runInAction(() => {
       this.me = user ? JSON.parse(user) : undefined;
+    })
+  }
+
+  @action async initlikedComments() {
+    const likedComments = await AsyncStorage.getItem('likedComments');
+    runInAction(() => {
+      this.likedComments = likedComments ? JSON.parse(likedComments) : [];
     })
   }
 
@@ -61,6 +74,20 @@ export class UserStore {
 
   @action async unFollow(userId: string) {
     this.followings = this.followings.filter((relationship) => relationship.followedId !== userId);
+  }
+
+  @action async likeComment(commentId: string) {
+    this.likedComments.push(commentId);
+    AsyncStorage.setItem('likedComments', JSON.stringify(this.likedComments));
+  }
+
+  @action async unlikeComment(commentId: string) {
+    this.likedComments = this.likedComments.filter((id) => id !== commentId);
+    AsyncStorage.setItem('likedComments', JSON.stringify(this.likedComments));
+  }
+
+  isLikedComment(commentId: string): boolean {
+    return this.likedComments.includes(commentId);
   }
 }
 
