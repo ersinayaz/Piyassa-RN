@@ -54,7 +54,7 @@ const CommentItem = (props: CommentItemProps) => {
         const report = await reports.create({
             status: 'pending',
             commentId: data.id,
-            userId: userStore.me?.id,
+            userId: userStore.me?.id || null,
         });
         feedbackModalRef.current.open();
     }
