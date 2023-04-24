@@ -136,7 +136,7 @@ const ParityDetailScreen = ({ navigation, route }) => {
               setCommentList([...commentList, ...data]);
               setTimeout(() => {
                 setLoading(false);
-              }, 250);
+              }, 1);
             }}
           />
           {loading ?

@@ -4,6 +4,8 @@ import { MinimalUser } from './User';
 export type Relationship = {
     id: string;
     createdAt: number;
-    follower: MinimalUser;
-    followed: MinimalUser;
+    // follower: MinimalUser;
+    // followed: MinimalUser;
+    followerId: string;
+    followedId: string;
 }

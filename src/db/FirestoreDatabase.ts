@@ -115,6 +115,22 @@ export class FirestoreDatabase<T> {
 
         return result;
     }
+
+    async getRelationships(followerId: string): Promise<T[]> {
+        const snapshot = await firestore().collection(this.collectionName)
+            .where('followerId', '==', followerId)
+            .orderBy('createdAt', 'desc')
+            .get();
+        const result: T[] = [];
+
+        snapshot.forEach((childSnapshot) => {
+            const childData = childSnapshot.data();
+            result.push(childData);
+        });
+
+        return result;
+    }
+
 }
 
 export const users = new FirestoreDatabase<User>("users");

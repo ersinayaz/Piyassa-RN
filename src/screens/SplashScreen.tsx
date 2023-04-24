@@ -13,7 +13,7 @@ import { View, StyleSheet, Image, AppState } from 'react-native';
 const SplashScreen = observer(({ navigation }) => {
 
   const { deviceStore, userStore } = useStore();
-  const { parities } = useFirestore();
+  const { parities, relationships } = useFirestore();
   const [initialData, setInitialData] = useState(null);
 
   useEffect(() => {
@@ -21,6 +21,7 @@ const SplashScreen = observer(({ navigation }) => {
       const deviceData = await getDeviceData();
       const ipData = await getIP();
       const parities = await getParities();
+      const followings = await getFollowings();
       const data = {
         ip: ipData,
         user: userStore.me,
@@ -43,6 +44,13 @@ const SplashScreen = observer(({ navigation }) => {
         closingPrice: dbData?.closingPrice,
       }
     });
+  }
+
+  const getFollowings = async () => {
+    if (!userStore.me) return;
+    const followings = await relationships.getRelationships(userStore.me.id);
+    userStore.setRelationships(followings);
+    return followings;
   }
 
   useEffect(() => {
