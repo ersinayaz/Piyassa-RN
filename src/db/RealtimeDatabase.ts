@@ -1,6 +1,6 @@
 import ObjectID from 'bson-objectid';
 import { firebase } from '@react-native-firebase/database';
-import { User, Comment, Relationship } from '../models';
+import { User, Comment, Relationship, Reports } from '../models';
 
 export class RealtimeDatabase<T> {
     collectionName: string;
@@ -78,21 +78,24 @@ export class RealtimeDatabase<T> {
     }
 }
 
-export const users = new RealtimeDatabase<User>("users");
-export const relationships = new RealtimeDatabase<Relationship>("relationships");
-export const comments = new RealtimeDatabase<Comment>("comments");
+// export const users = new RealtimeDatabase<User>("users");
+// export const relationships = new RealtimeDatabase<Relationship>("relationships");
+// export const comments = new RealtimeDatabase<Comment>("comments");
+// export const reports = new RealtimeDatabase<Reports>("reports");
 
 
 export type Realtime = {
-    users: RealtimeDatabase<User>;
-    comments: RealtimeDatabase<Comment>;
-    relationships: RealtimeDatabase<Relationship>;
+    // users: RealtimeDatabase<User>;
+    // comments: RealtimeDatabase<Comment>;
+    // relationships: RealtimeDatabase<Relationship>;
+    // reports: RealtimeDatabase<Reports>;
 }
 
 const firebaseRealtime: Realtime = {
-    users,
-    comments,
-    relationships,
+    // users,
+    // comments,
+    // relationships,
+    // reports
 };
 
 export default firebaseRealtime;
