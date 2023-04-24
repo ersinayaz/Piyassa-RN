@@ -35,8 +35,8 @@ const en = {
     lbl_Comment: "Comments",
 
     // Page - Currency Detail - Modal :
-    txt_cdm_userFollow: 'Turn on user notifications',
-    txt_cdm_userUnFollow: 'Turn off user notifications',
+    txt_cdm_userFollow: 'Turn on notifications',
+    txt_cdm_userUnFollow: 'Turn off notifications',
     txt_cdm_commentLike: 'Like comment',
     txt_cdm_commentUnlike: 'Unlike comment',
     txt_cdm_commentQuotation: 'Reply with quotation',

@@ -34,8 +34,8 @@ const tr = {
     lbl_Comment: "Yorum",
 
     // Page - Currency Detail - Modal :
-    txt_cdm_userFollow: "Kullanıcı bildirimlerini aç",
-    txt_cdm_userUnFollow: "Kullanıcı bildirimlerini kapat",
+    txt_cdm_userFollow: "Bildirimleri Aç",
+    txt_cdm_userUnFollow: "Bildirimleri Kapat",
     txt_cdm_commentLike: "Yorumu beğen",
     txt_cdm_commentUnlike: "Beğenmekten vazgeç",
     txt_cdm_commentQuotation: "Alıntı yaparak cevapla",

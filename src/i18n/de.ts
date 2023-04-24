@@ -35,8 +35,8 @@ const de = {
     lbl_Comment: "Kommentare",
 
     // Page - Currency Detail - Modal :
-    txt_cdm_userFollow: 'Benutzerbenachrichtigungen einschalten',
-    txt_cdm_userUnFollow: 'Benutzerbenachrichtigungen ausschalten',
+    txt_cdm_userFollow: 'Benutzer folgen',
+    txt_cdm_userUnFollow: 'Benutzer entfolgen',
     txt_cdm_commentLike: 'Kommentar mögen',
     txt_cdm_commentUnlike: 'Kommentar nicht mögen',
     txt_cdm_commentQuotation: 'Mit Zitat antworten',
