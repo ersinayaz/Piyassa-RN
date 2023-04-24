@@ -12,7 +12,13 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
     const [isFollowings, setIsFollowings] = useState(userStore.isFollowing(user.id));
 
     const followOrUnfollow = async () => {
-        if (!userStore.me) return navigation.navigate('Login', { navigation, parity, from: "ParityDetail" });
+        if(!userStore.me)
+        {
+            modalRef.current.close();
+            navigation.navigate('Login', { navigation, parity, from: "ParityDetail" });
+            return;
+        }
+
 
         if (!isFollowings) {
             const relationship = await relationships.create({
