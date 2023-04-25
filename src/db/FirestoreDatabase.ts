@@ -1,6 +1,6 @@
 import ObjectID from 'bson-objectid';
 import firestore from '@react-native-firebase/firestore';
-import { User, Comment, Relationship, Parity, Reports } from '../models';
+import { User, Comment, Relationship, Parity, Reports, Feedback } from '../models';
 
 export class FirestoreDatabase<T> {
     collectionName: string;
@@ -172,6 +172,7 @@ export const users = new FirestoreDatabase<User>("users");
 export const reports = new FirestoreDatabase<Reports>("reports");
 export const parities = new FirestoreDatabase<Parity>("parities");
 export const comments = new FirestoreDatabase<Comment>("comments");
+export const feedbacks = new FirestoreDatabase<Feedback>("feedbacks");
 export const relationships = new FirestoreDatabase<Relationship>("relationships");
 
 
@@ -180,6 +181,7 @@ export type Firestore = {
     reports: FirestoreDatabase<Reports>;
     parities: FirestoreDatabase<Parity>;
     comments: FirestoreDatabase<Comment>;
+    feedbacks: FirestoreDatabase<Feedback>;
     relationships: FirestoreDatabase<Relationship>;
 }
 
@@ -188,6 +190,7 @@ const firebaseFirestore: Firestore = {
     reports,
     comments,
     parities,
+    feedbacks,
     relationships
 };
 

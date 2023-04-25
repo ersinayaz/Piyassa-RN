@@ -17,7 +17,9 @@ import TextArea from './src/components/TextArea';
 import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import SplashScreen from './src/screens/SplashScreen';
+import PolicyScreen from './src/screens/PolicyScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 import ParityDetailScreen from './src/screens/ParityDetailScreen';
 
 const MainStack = createStackNavigator();
@@ -68,6 +70,7 @@ function App(): JSX.Element {
       <ProfileStack.Navigator screenOptions={({ navigation, route }) => ({
         animationEnabled: false,
         safeAreaInsets: { top: 0 },
+        headerLeftLabelVisible: false,
         title: i18n.t("route_" + route.name),
         headerStyle: { backgroundColor: color('color2'), shadowOpacity: 0, elevation: 0, borderBottomWidth: 0, shadowColor: 'transparent' },
         headerTitleContainerStyle: styles.headerTitleContainerStyle,
@@ -76,6 +79,8 @@ function App(): JSX.Element {
         headerTitle: (props) => <Image style={styles.headerLogo} source={require('./src/assets/images/logo/header-default.png')} />,
       })}>
         <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+        <ProfileStack.Screen name="Settings" component={SettingsScreen} />
+        <ProfileStack.Screen name="Policy" component={PolicyScreen} options={{ animationEnabled: true, presentation: "card", gestureEnabled: true }} />
       </ProfileStack.Navigator>
     )
   }

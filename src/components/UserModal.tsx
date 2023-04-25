@@ -28,8 +28,11 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
             await users.update(userStore.me.id, {
                 followersCount: userStore.me.followersCount
             });
-            await users.update(user.id, {
-                followingsCount: userStore.me.followingsCount
+
+
+            const anotherUser = await users.getById(user.id);
+            await users.update(anotherUser.id, {
+                followingsCount: anotherUser.followingsCount + 1
             });
 
 
@@ -45,9 +48,12 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
             await users.update(userStore.me.id, {
                 followersCount: userStore.me.followersCount
             });
-            await users.update(user.id, {
-                followingsCount: userStore.me.followingsCount
+
+            const anotherUser = await users.getById(user.id);
+            await users.update(anotherUser.id, {
+                followingsCount: anotherUser.followingsCount - 1
             });
+            
 
             modalRef.current.close();
         }
