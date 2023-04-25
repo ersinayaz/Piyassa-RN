@@ -1,10 +1,28 @@
 import { useStore } from '../store';
 import { color } from '../assets/colors';
+import React, { useEffect, useRef } from 'react';
 import ParityCard from '../components/ParityCard';
+import messaging from '@react-native-firebase/messaging';
 import { View, StyleSheet, FlatList } from 'react-native';
+import NotificationModal from '../components/NotificationModal';
+import BottomDrawer, { BottomDrawerMethods } from 'react-native-animated-bottom-drawer';
 
 const HomeScreen = ({ navigation }) => {
     const { deviceStore } = useStore();
+    const notificationModal = useRef<BottomDrawerMethods>(null);
+
+    useEffect(() => {
+
+        const notificationCheck = async () => {
+            const messagingStatus = await messaging().hasPermission();
+            if (messagingStatus === messaging.AuthorizationStatus.NOT_DETERMINED) {
+                notificationModal.current?.open();
+            }
+        }
+
+
+        notificationCheck();
+    }, []);
 
     return (
         <>
@@ -22,6 +40,9 @@ const HomeScreen = ({ navigation }) => {
                     />
                 </View>
             </View>
+            <BottomDrawer ref={notificationModal} initialHeight={350}>
+                <NotificationModal modalRef={notificationModal} />
+            </BottomDrawer>
         </>
     );
 };
