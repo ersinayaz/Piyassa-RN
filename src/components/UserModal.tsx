@@ -12,14 +12,10 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
     const [isFollowings, setIsFollowings] = useState(userStore.isFollowing(user.id));
 
     const followOrUnfollow = async () => {
-        if(!userStore.me)
-        {
-            modalRef.current.close();
+        if (!userStore.me) {
             navigation.navigate('Login', { navigation, parity, from: "ParityDetail" });
             return;
         }
-
-
         if (!isFollowings) {
             const relationship = await relationships.create({
                 followerId: userStore.me.id,
@@ -47,7 +43,9 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
                         <Text style={styles.btnNotificationText}>{isFollowings ? i18n.t("txt_cdm_userUnFollow") : i18n.t("txt_cdm_userFollow")}</Text>
                     </TouchableOpacity>
                     :
-                    <TouchableOpacity onPress={() => { navigation.navigate("Profile"); }} style={[styles.btnNotification, { backgroundColor: color("color2"), width: "90%" }]}>
+                    <TouchableOpacity onPress={() => {
+                        modalRef.current.close(); navigation.navigate("Profile");
+                    }} style={[styles.btnNotification, { backgroundColor: color("color2"), width: "90%" }]}>
                         <Text style={styles.btnNotificationText}>{i18n.t("txt_myProfile")}</Text>
                     </TouchableOpacity>
                 }

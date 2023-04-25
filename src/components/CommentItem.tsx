@@ -4,15 +4,16 @@ import i18n from '../i18n/_i18n';
 import UserModal from './UserModal';
 import { useStore } from '../store';
 import { useFirestore } from '../db';
+import { Parities } from '../models';
 import { color } from '../assets/colors';
 import FeedbackModal from './FeedbackModal';
 import ParityCard from '../components/ParityCard';
+import { comments } from '../db/FirestoreDatabase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, { useState, useEffect, useRef } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import BottomDrawer, { BottomDrawerMethods } from 'react-native-animated-bottom-drawer';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ActionSheetIOS, Share } from 'react-native';
-import { comments } from '../db/FirestoreDatabase';
 
 moment.locale('tr');
 
@@ -20,10 +21,11 @@ interface CommentItemProps {
     data: any;
     navigation: any;
     parity: any;
+    profileScreen?: boolean;
 }
 
 const CommentItem = (props: CommentItemProps) => {
-    const { data, navigation, parity } = props;
+    const { data, navigation, parity, profileScreen } = props;
     const userModalRef = useRef<BottomDrawerMethods>(null);
     const feedbackModalRef = useRef<BottomDrawerMethods>(null);
     const { userStore } = useStore();
@@ -86,21 +88,36 @@ const CommentItem = (props: CommentItemProps) => {
     const likeOrUnlike = () => {
         if (!userStore.me) return navigation.navigate('Login', { navigation, parity, from: "ParityDetail" });
 
-        if (isLiked) {
-            userStore.unlikeComment(data.id);
-            data.likeCount--;
-            setIsLiked(false);
-        } else {
-            userStore.likeComment(data.id);
-            data.likeCount++;
-            setIsLiked(true);
-        }
+        if (profileScreen != true) {
+            if (isLiked) {
+                userStore.unlikeComment(data.id);
+                data.likeCount--;
+                setIsLiked(false);
+            } else {
+                userStore.likeComment(data.id);
+                data.likeCount++;
+                setIsLiked(true);
+            }
 
-        comments.update(data.id, { likeCount: data.likeCount });
+            comments.update(data.id, { likeCount: data.likeCount });
+        }
+    }
+
+    const getParity = () => {
+        return Parities.find(p => p.id == parity.id);
     }
 
     return (
         <View style={styles.container}>
+            {
+                profileScreen == true ?
+                    <View style={styles.profileScreenInfoContainer}>
+                        <Image source={getParity(parity.id).image} style={{ width: 18, height: 18 }} />
+                        <Text style={{ color: color("color8"), fontWeight: "500", marginLeft: 10 }}>{getParity(parity.id).description} Yorumu</Text>
+                    </View>
+                    :
+                    null
+            }
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => { userModalRef.current.open() }}>
                     <Image style={styles.userImage} source={{ uri: data.user.imageUri }} />
@@ -118,14 +135,19 @@ const CommentItem = (props: CommentItemProps) => {
                 </View>
             </View>
             <View style={styles.body}>
-                <Text style={styles.txtBody}>{data.body}</Text>
+                <Text style={styles.txtBody} selectable>{data.body}</Text>
             </View>
-            <View style={styles.buttons}>
-                <TouchableOpacity onPress={likeOrUnlike} style={[styles.btnLike, isLiked ? styles.btnLiked : null]}>
-                    <Ionicons name={isLiked ? "heart" : "heart-outline"} size={20} color={color(isLiked ? "color5" : "color3")} />
-                    <Text style={[styles.txtLikeCount, { color: color(isLiked ? "color5" : "color3"), display: data.likeCount == 0 ? "none" : "flex" }]}>{data.likeCount}</Text>
-                </TouchableOpacity>
-            </View>
+            {profileScreen == false ?
+                <View style={styles.buttons}>
+                    <TouchableOpacity onPress={likeOrUnlike} style={[styles.btnLike, isLiked ? styles.btnLiked : null]}>
+                        <Ionicons name={isLiked ? "heart" : "heart-outline"} size={20} color={color(isLiked ? "color5" : "color3")} />
+                        <Text style={[styles.txtLikeCount, { color: color(isLiked ? "color5" : "color3"), display: data.likeCount == 0 ? "none" : "flex" }]}>{data.likeCount}</Text>
+                    </TouchableOpacity>
+                </View>
+                :
+                null
+            }
+
 
             <BottomDrawer ref={userModalRef} initialHeight={150} openDuration={250} closeDuration={100}>
                 <UserModal navigation={navigation} parity={parity} user={data.user} modalRef={userModalRef} />
@@ -202,4 +224,13 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         fontWeight: "bold"
     },
+    profileScreenInfoContainer: {
+        height: 36,
+        paddingLeft: 10,
+        marginBottom: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: color("color5"),
+        borderRadius: 10,
+    }
 });

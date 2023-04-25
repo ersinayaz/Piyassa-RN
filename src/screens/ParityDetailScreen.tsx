@@ -128,7 +128,7 @@ const ParityDetailScreen = ({ navigation, route }) => {
             keyExtractor={(item, index) => index.toString()}
             ListFooterComponent={() => (<View style={{ height: 5 }} />)}
             ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
-            renderItem={(data) => <CommentItem navigation={navigation} parity={parity} data={data.item} />}
+            renderItem={(data) => <CommentItem profileScreen={false} navigation={navigation} parity={parity} data={data.item} />}
             onEndReached={async () => {
               const lastComment = commentList[commentList.length - 1];
               const lastCommentCreatedAt = lastComment ? lastComment.createdAt : null;

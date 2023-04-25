@@ -15,11 +15,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // Screens
 import TextArea from './src/components/TextArea';
 import HomeScreen from './src/screens/HomeScreen';
+import LoginScreen from './src/screens/LoginScreen';
 import SplashScreen from './src/screens/SplashScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
 import ParityDetailScreen from './src/screens/ParityDetailScreen';
 
 const MainStack = createStackNavigator();
 const HomeStack = createStackNavigator();
+const ProfileStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function App(): JSX.Element {
@@ -37,7 +40,7 @@ function App(): JSX.Element {
         tabBarStyle: [{ backgroundColor: color("color6"), borderTopWidth: Appearance.getColorScheme() === 'dark' ? 1 : 1, borderTopColor: color("color5") }],
       })}>
         <Tab.Screen name="HomeStack" component={HomeStackNavigator} />
-        <Tab.Screen name="ProfileStack" component={HomeStackNavigator} />
+        <Tab.Screen name="ProfileStack" component={ProfileStackNavigator} />
       </Tab.Navigator>
     )
   }
@@ -50,13 +53,30 @@ function App(): JSX.Element {
         title: i18n.t("route_" + route.name),
         headerStyle: { backgroundColor: color('color2'), shadowOpacity: 0, elevation: 0, borderBottomWidth: 0, shadowColor: 'transparent' },
         headerTitleContainerStyle: styles.headerTitleContainerStyle,
-        headerLeftContainerStyle: { zIndex:2 },
-        headerRightContainerStyle: { zIndex:2 },
+        headerLeftContainerStyle: { zIndex: 2 },
+        headerRightContainerStyle: { zIndex: 2 },
         headerTitle: (props) => <Image style={styles.headerLogo} source={require('./src/assets/images/logo/header-default.png')} />,
       })}>
         <HomeStack.Screen name="Home" component={HomeScreen} />
         <HomeStack.Screen name="ParityDetail" component={ParityDetailScreen} />
       </HomeStack.Navigator>
+    )
+  }
+
+  const ProfileStackNavigator = () => {
+    return (
+      <ProfileStack.Navigator screenOptions={({ navigation, route }) => ({
+        animationEnabled: false,
+        safeAreaInsets: { top: 0 },
+        title: i18n.t("route_" + route.name),
+        headerStyle: { backgroundColor: color('color2'), shadowOpacity: 0, elevation: 0, borderBottomWidth: 0, shadowColor: 'transparent' },
+        headerTitleContainerStyle: styles.headerTitleContainerStyle,
+        headerLeftContainerStyle: { zIndex: 2 },
+        headerRightContainerStyle: { zIndex: 2 },
+        headerTitle: (props) => <Image style={styles.headerLogo} source={require('./src/assets/images/logo/header-default.png')} />,
+      })}>
+        <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+      </ProfileStack.Navigator>
     )
   }
 
@@ -79,6 +99,7 @@ function App(): JSX.Element {
             <MainStack.Screen name="Splash" component={SplashScreen} options={{ animationEnabled: false, headerShown: false }} />
             <MainStack.Screen name="Tab" component={TabNavigator} options={{ animationEnabled: true, presentation: "transparentModal" }} />
             <MainStack.Screen name="TextArea" component={TextArea} options={{ headerShown: false, animationEnabled: true, presentation: "modal", gestureEnabled: true }} />
+            <MainStack.Screen name="Login" component={LoginScreen} options={{ animationEnabled: true, presentation: "modal", gestureEnabled: false, headerShown: false }} />
           </MainStack.Navigator>
         </StoreProvider>
       </FirebaseProvider>

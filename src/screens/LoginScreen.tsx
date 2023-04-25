@@ -169,7 +169,7 @@ const LoginScreen = ({ navigation, route }) => {
             lastLoginIp: deviceStore.ip.publicIP,
             deviceData: deviceStore.info,
             followersCount: 0,
-            followingCount: 0,
+            followingsCount: 0,
             commentsCount: 0,
         } as User;
 

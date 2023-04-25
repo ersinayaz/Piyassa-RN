@@ -116,6 +116,23 @@ export class FirestoreDatabase<T> {
         return result;
     }
 
+    async getCommentsByUserId(id: string, lastRecordCreatedAt: number | null): Promise<T[]> {
+        const snapshot = await firestore().collection(this.collectionName)
+            .where('user.id', '==', id)
+            .orderBy('createdAt', 'desc')
+            .limit(10)
+            .startAfter(lastRecordCreatedAt ? lastRecordCreatedAt : Date.now())
+            .get();
+        const result: T[] = [];
+
+        snapshot.forEach((childSnapshot) => {
+            const childData = childSnapshot.data();
+            result.push(childData);
+        });
+
+        return result;
+    }
+
     async getRelationships(followerId: string): Promise<T[]> {
         const snapshot = await firestore().collection(this.collectionName)
             .where('followerId', '==', followerId)
@@ -143,10 +160,10 @@ export class FirestoreDatabase<T> {
             result.push(childData);
         });
 
-        if(result.length > 0)
+        if (result.length > 0)
             return result[0];
         else
-        return null;
+            return null;
     }
 
 }
