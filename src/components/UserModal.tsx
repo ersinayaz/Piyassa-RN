@@ -55,7 +55,11 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
 
     return (
         <View style={styles.container}>
-            <Image style={styles.userImage} source={{ uri: user.imageUri }} />
+            {user.imageUri ?
+                <Image style={styles.userImage} source={{ uri: user.imageUri }} />
+                :
+                <Image style={styles.userImage} source={require('../assets/images/user/default.png')} />
+            }
             <View style={{ marginLeft: 20, justifyContent: "center" }}>
                 <Text style={styles.userName}>{user.name}</Text>
                 {userStore.me == null || userStore.me?.id != user.id ?

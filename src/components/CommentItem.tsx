@@ -120,7 +120,11 @@ const CommentItem = (props: CommentItemProps) => {
             }
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => { userModalRef.current.open() }}>
-                    <Image style={styles.userImage} source={{ uri: data.user.imageUri }} />
+                    {data.user.imageUri ?
+                        <Image style={styles.userImage} source={{ uri: data.user.imageUri }} />
+                        :
+                        <Image style={styles.userImage} source={require('../assets/images/user/default.png')} />
+                    }
                 </TouchableOpacity>
                 <View style={styles.headerCenter}>
                     <TouchableOpacity onPress={() => { userModalRef.current.open() }}>
