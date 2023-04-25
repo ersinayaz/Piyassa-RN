@@ -10,7 +10,7 @@
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)tr.com.piyassa</string>
+		<string>$(AppIdentifierPrefix)app.piyyasa.Piyyasa</string>
 	</array>
 </dict>
 </plist>
