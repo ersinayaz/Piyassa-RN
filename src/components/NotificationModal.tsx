@@ -15,14 +15,9 @@ const NotificationModal = ({ modalRef }) => {
         modalRef.current.close();
         const messagingStatus = await messaging().requestPermission({
             sound: true,
-            announcement: true,
             badge: true,
             alert: true,
             carPlay: true,
-            criticalAlert: true,
-            provisional: true,
-            lockScreen: true,
-            notificationCenter: true
         });
         if (messagingStatus === messaging.AuthorizationStatus.AUTHORIZED || messagingStatus === messaging.AuthorizationStatus.PROVISIONAL) {
             const token = await messaging().getToken();
