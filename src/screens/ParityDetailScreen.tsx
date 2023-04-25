@@ -34,7 +34,7 @@ const ParityDetailScreen = ({ navigation, route }) => {
     reaction(() => userStore.me?.commentsCount, async (data, prev) => {
       if (data < prev) {
         const data = await comments.getComments(parity.id);
-        setCommentList([...data]);
+        setCommentList(data);
       }
     });
 

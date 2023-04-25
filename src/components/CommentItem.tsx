@@ -1,5 +1,6 @@
 import 'moment/locale/tr';
 import moment from 'moment';
+import { reaction } from 'mobx';
 import i18n from '../i18n/_i18n';
 import UserModal from './UserModal';
 import { useStore } from '../store';
@@ -31,6 +32,13 @@ const CommentItem = (props: CommentItemProps) => {
     const { userStore } = useStore();
     const { reports, users } = useFirestore();
     const [isLiked, setIsLiked] = useState(userStore.isLikedComment(data.id));
+
+
+    useEffect(() => {
+        reaction(() => userStore.me?.commentsCount, async (data, prev) => {
+            setIsLiked(userStore.isLikedComment(data.id));
+        });
+    }, []);
 
 
     const showAction = () => {
@@ -162,9 +170,9 @@ const CommentItem = (props: CommentItemProps) => {
             </View>
             {profileScreen == false ?
                 <View style={styles.buttons}>
-                    <TouchableOpacity onPress={likeOrUnlike} style={[styles.btnLike, isLiked ? styles.btnLiked : null]}>
-                        <Ionicons name={isLiked ? "heart" : "heart-outline"} size={20} color={color(isLiked ? "color5" : "color3")} />
-                        <Text style={[styles.txtLikeCount, { color: color(isLiked ? "color5" : "color3"), display: data.likeCount == 0 ? "none" : "flex" }]}>{data.likeCount}</Text>
+                    <TouchableOpacity onPress={likeOrUnlike} style={[styles.btnLike, userStore.isLikedComment(data.id) ? styles.btnLiked : styles.btnLike]}>
+                        <Ionicons name={userStore.isLikedComment(data.id) ? "heart" : "heart-outline"} size={20} color={color(userStore.isLikedComment(data.id) ? "color5" : "color3")} />
+                        <Text style={[styles.txtLikeCount, { color: color(userStore.isLikedComment(data.id) ? "color5" : "color3"), display: data.likeCount == 0 ? "none" : "flex" }]}>{data.likeCount}</Text>
                     </TouchableOpacity>
                 </View>
                 :
