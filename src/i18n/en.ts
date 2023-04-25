@@ -43,6 +43,7 @@ const en = {
     txt_cdm_commentShare: 'Share comment',
     txt_cdm_commentComplaint: 'Report',
     txt_cdm_commentActionTitle: "Like & Share & Report",
+    txt_cmd_commentDelete: "Delete",
     txt_cdm_commentActionDescription: "You can like, share or report the comment.",
 
     // Page - New Comment :

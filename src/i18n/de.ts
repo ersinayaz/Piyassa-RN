@@ -42,6 +42,7 @@ const de = {
     txt_cdm_commentQuotation: 'Mit Zitat antworten',
     txt_cdm_commentShare: 'Kommentar teilen',
     txt_cdm_commentComplaint: 'Melden',
+    txt_cmd_commentDelete: "Löschen",
     txt_cdm_commentActionTitle: "Gefällt mir & Teilen & Melden",
     txt_cdm_commentActionDescription: "Sie können den Kommentar liken, teilen oder melden.",
 

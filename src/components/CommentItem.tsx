@@ -34,6 +34,13 @@ const CommentItem = (props: CommentItemProps) => {
 
 
     const showAction = () => {
+        var options = [i18n.t("btn_cancel"), !isLiked ? i18n.t("txt_cdm_commentLike") : i18n.t("txt_cdm_commentUnlike"), i18n.t("txt_cdm_commentShare"), i18n.t("txt_cdm_commentComplaint")];
+
+
+        if (userStore.me?.id == data.user.id) {
+            options.push(i18n.t("txt_cmd_commentDelete"));
+        }
+
         ActionSheetIOS.showActionSheetWithOptions(
             {
                 cancelButtonIndex: 0,
@@ -41,7 +48,7 @@ const CommentItem = (props: CommentItemProps) => {
                 userInterfaceStyle: 'light',
                 title: i18n.t("txt_cdm_commentActionTitle"),
                 message: i18n.t("txt_cdm_commentActionDescription"),
-                options: [i18n.t("btn_cancel"), !isLiked ? i18n.t("txt_cdm_commentLike") : i18n.t("txt_cdm_commentUnlike"), i18n.t("txt_cdm_commentShare"), i18n.t("txt_cdm_commentComplaint")],
+                options: options,
             },
             buttonIndex => {
                 switch (buttonIndex) {
@@ -49,9 +56,16 @@ const CommentItem = (props: CommentItemProps) => {
                     case 1: likeOrUnlike(); break;
                     case 2: share(); break;
                     case 3: report(); break;
+                    case 4: deleteComment(); break;
                 }
             },
         );
+    }
+
+    const deleteComment = async () => {
+        if (userStore.me?.id == data.user.id) {
+            comments.delete(data.id);
+        }
     }
 
     const report = async () => {

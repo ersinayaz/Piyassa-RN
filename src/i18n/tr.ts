@@ -42,6 +42,7 @@ const tr = {
     txt_cdm_commentShare: "Gönderiyi paylaş",
     txt_cdm_commentComplaint: "Şikayet et",
     txt_cdm_commentActionTitle: "Beğen & Paylaş & Şikayet Et",
+    txt_cmd_commentDelete: "Yorumu sil",
     txt_cdm_commentActionDescription: "Gönderiyi beğenmek, paylaşmak\nveya şikayet etmek mi istiyorsunuz?",
 
     // Page - New Comment :
