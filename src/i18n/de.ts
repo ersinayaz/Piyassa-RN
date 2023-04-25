@@ -5,6 +5,7 @@ const de = {
 
     // Buttons - General :
     btn_cancel: "Abbrechen",
+    btn_save: "Speichern",
 
     // Page - Permissions :
     perm_notification_title: "Willkommen bei Piyassa!",
@@ -52,6 +53,8 @@ const de = {
     btn_newCommentSend: "Kommentar posten",
     txt_newCommentQuotation: "Zitat",
     btn_newCommentQuotation: "Zitat posten",
+    lbl_emptyname_title: 'Profil Vervollständigen',
+    lbl_emptyname_description: 'Um einen Kommentar abzugeben, müssen Sie Ihren Namen einmal speichern.\n\nIhr Vor- und Nachname:',
 
     // Parities :
     parity_name_d: "Dollar",

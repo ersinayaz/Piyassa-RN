@@ -5,6 +5,7 @@ const en = {
 
     // Buttons - General :
     btn_cancel: "Cancel",
+    btn_save: "Save",
 
     // Page - Permissions :
     perm_notification_title: "Welcome to Piyassa!",
@@ -52,6 +53,8 @@ const en = {
     btn_newCommentSend: "Post Comment",
     txt_newCommentQuotation: "Quote",
     btn_newCommentQuotation: "Post Quote",
+    lbl_emptyname_title: 'Complete Profile',
+    lbl_emptyname_description: 'To be able to leave a comment, you must save your name once.\n\n Your first and last name:',
 
     // Parities :
     parity_name_d: "Dollar",

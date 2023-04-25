@@ -9,7 +9,8 @@ import * as StoreReview from 'react-native-store-review';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, { useState, useEffect, useRef } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { View, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { placeholder } from 'i18n-js';
 
 const ParityDetailScreen = ({ navigation, route }) => {
   const parity = route.params?.data;
@@ -52,6 +53,30 @@ const ParityDetailScreen = ({ navigation, route }) => {
   const newComment = async () => {
     if (!userStore.me) return navigation.navigate('Login', { navigation, parity, from: "ParityDetail" });
 
+    if (userStore.me.name == null || userStore.me.name.length == 0) {
+      Alert.prompt(i18n.t("lbl_emptyname_title"), i18n.t("lbl_emptyname_description"),
+        [
+          {
+            text: i18n.t('btn_save'),
+            onPress: async (text: string) => {
+              const u = userStore.me;
+              u.name = text;
+              await userStore.setUser(u);
+              users.update(userStore.me.id, { name: text });
+              openNewCommentPopup();
+            }
+          },
+          { text: i18n.t('btn_cancel'), style: "cancel" }
+        ],
+        'plain-text', '', 'default'
+      );
+    }
+    else {
+      openNewCommentPopup();
+    }
+  };
+
+  const openNewCommentPopup = () => {
     navigation.navigate('TextArea', {
       title: i18n.t('txt_newComment'),
       placeholder: i18n.t('txt_newCommentPlaceholder'),
@@ -93,7 +118,7 @@ const ParityDetailScreen = ({ navigation, route }) => {
         flatListRef.current.scrollToIndex({ index: 0, animated: true });
       }
     });
-  };
+  }
 
   return (
     <>

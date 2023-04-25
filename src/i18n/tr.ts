@@ -5,6 +5,7 @@ const tr = {
 
     // Buttons - General :
     btn_cancel: "Vazgeç",
+    btn_save: "Kaydet",
 
     // Page - Permissions :
     perm_notification_title: "Piyassa Uygulamasına Hoşgeldiniz!",
@@ -51,6 +52,8 @@ const tr = {
     btn_newCommentSend: "Yorumu Yayınla",
     txt_newCommentQuotation: "Alıntı Yap",
     btn_newCommentQuotation: "Alıntıyı Yayınla",
+    lbl_emptyname_title: 'Profili Tamamla',
+    lbl_emptyname_description: 'Yorum yapabilmek için isminizi tek seferlik kaydetmelisiniz.\n\n Adınız ve soyadınız:',
 
     // Parities :
     parity_name_d: "Dolar",
