@@ -19,7 +19,6 @@ const ProfileScreen = ({ navigation, route }) => {
     const [commentList, setCommentList] = useState([]);
 
     useEffect(() => {
-
         if (!userStore.me) {
             navigation.navigate('Login', { from: 'Profile' });
         }
@@ -42,6 +41,16 @@ const ProfileScreen = ({ navigation, route }) => {
         });
 
     }, []);
+
+    useEffect(() => {
+        if (userStore.me) {
+            comments.getCommentsByUserId(userStore.me.id).then((data) => {
+                setCommentList(data);
+                setLoading(false);
+            });
+        }
+    }, [userStore.me]);
+
 
     const counterItem = (title, count) => {
         return (
@@ -169,7 +178,7 @@ const styles = StyleSheet.create({
     createdAt: {
         fontSize: 12,
         marginTop: 5,
-        marginVertical:15,
+        marginVertical: 15,
         color: color("color7")
     },
     imageBox: {

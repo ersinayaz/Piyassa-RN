@@ -140,12 +140,12 @@ const LoginScreen = ({ navigation, route }) => {
             user = await userCreate(provider, data);
         }
         setLoading(false);
-        userStore.setUser(user);
+        await userStore.setUser(user);
 
         if (route.params?.from == "ParityDetail")
             navigation.navigate("ParityDetail", { data: route.params.parity });
         else
-            navigation.navigate("Profile");
+            navigation.navigate("Profile", { data: userStore.me });
     }
 
     const userCreate = async (provider, data) => {

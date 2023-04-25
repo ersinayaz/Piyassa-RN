@@ -42,11 +42,11 @@ export class UserStore {
     })
   }
 
-  @action setUser(user: User) {
-    AsyncStorage.setItem('user', JSON.stringify(user)).then(() => {
-      runInAction(() => {
-        this.me = user;
-      });
+  @action async setUser(user: User) 
+  {
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+    runInAction(() => {
+      this.me = user;
     });
   }
 
