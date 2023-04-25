@@ -8,7 +8,7 @@ import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 const UserModal = ({ navigation, user, parity, modalRef }) => {
     const { userStore } = useStore();
-    const { relationships } = useFirestore();
+    const { relationships, users } = useFirestore();
     const [isFollowings, setIsFollowings] = useState(userStore.isFollowing(user.id));
 
     const followOrUnfollow = async () => {
@@ -22,12 +22,33 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
                 followedId: user.id,
             });
 
+
+            userStore.me.followersCount = userStore.me.followersCount + 1;
+            userStore.setUser(userStore.me);
+            await users.update(userStore.me.id, {
+                followersCount: userStore.me.followersCount
+            });
+            await users.update(user.id, {
+                followingsCount: userStore.me.followingsCount
+            });
+
+
             userStore.follow(relationship);
             modalRef.current.close();
         } else {
             const relationship = userStore.followings.find((relationship) => relationship.followedId === user.id);
             await relationships.delete(relationship.id);
             userStore.unFollow(user.id);
+
+            userStore.me.followersCount = userStore.me.followersCount - 1;
+            userStore.setUser(userStore.me);
+            await users.update(userStore.me.id, {
+                followersCount: userStore.me.followersCount
+            });
+            await users.update(user.id, {
+                followingsCount: userStore.me.followingsCount
+            });
+
             modalRef.current.close();
         }
     }

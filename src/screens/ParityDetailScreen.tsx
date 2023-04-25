@@ -12,7 +12,7 @@ import { View, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 
 const ParityDetailScreen = ({ navigation, route }) => {
   const parity = route.params?.data;
   const { userStore } = useStore();
-  const { comments } = useFirestore();
+  const { comments, users } = useFirestore();
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [commentList, setCommentList] = useState([]);
@@ -36,40 +36,6 @@ const ParityDetailScreen = ({ navigation, route }) => {
       </View>
     );
   };
-
-  // userStore.setUser({
-  //   id: "OUC3PbTOudhJnHCNb2nBmDqH2F72",
-  //   createdAt: 1681311292879,
-  //   name: "Ersin Ayaz",
-  //   email: "ersinayaz@gmail.com",
-  //   imageUri: "https://lh3.googleusercontent.com/a/AGNmyxY77nRX6v45VG2RpHcbTb_at0t9Sz5gdCoPWH3GGM4=s400-c?i=1",
-  //   providers: ["google.com", "facebook.com"],
-  //   lastProvider: "google.com",
-  //   notificationToken: "e1m2oB-mTkDCj-lGwiPxfn:APA91bFv-reGBcmY7DMaQbfLkL9k6I2C1ieEduxcT2X52dK9XiFqgr3c9Zj-NmmCvDI776wy9FgHtEMnSU2EiNyc2PSl8NiJCwrVdHAQbcmPNRsgigI565YB9n0NPuqQpkRP5GNhx2mV",
-  //   facebookId: "x7KR6TbccJYIJkjotaqDNGGTW5l2",
-  //   googleId: "OUC3PbTOudhJnHCNb2nBmDqH2F72",
-  //   isBlocked: false,
-  //   appVersion: "1.0.0",
-  //   country: "TR",
-  //   language: "tr",
-  //   registerIp: "176.234.131.145",
-  //   lastLoginIp: "176.234.131.145",
-  //   followersCount: 0,
-  //   followingsCount: 0,
-  //   commentsCount: 0,
-  //   deviceData: {
-  //     id: "F11B0B46-99DE-4F41-BF53-F2FBD9971A68",
-  //     carrier: "Turkcell",
-  //     timeZone: "3",
-  //     os: "iOS",
-  //     deviceName: "Ersin iPhone'u",
-  //     brand: "Apple",
-  //     model: "iPhone 12",
-  //     hasNotch: true,
-  //     isEmulator: false,
-  //     isTablet: false,
-  //   },
-  // })
 
   const newComment = async () => {
     if (!userStore.me) return navigation.navigate('Login', { navigation, parity, from: "ParityDetail" });
@@ -97,6 +63,13 @@ const ParityDetailScreen = ({ navigation, route }) => {
             email: userStore.me.email,
             imageUri: userStore.me.imageUri
           }
+        });
+
+        userStore.me.commentsCount = userStore.me.commentsCount + 1;
+        userStore.setUser(userStore.me);
+
+        users.update(userStore.me.id, {
+          commentsCount: userStore.me.commentsCount
         });
 
         const data = await comments.getComments(parity.id);
