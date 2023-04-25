@@ -1,9 +1,11 @@
+import { reaction } from 'mobx';
 import i18n from '../i18n/_i18n';
 import { useStore } from '../store';
 import { useFirestore } from '../db';
 import { color } from '../assets/colors';
 import ParityCard from '../components/ParityCard';
 import CommentItem from '../components/CommentItem';
+import * as StoreReview from 'react-native-store-review';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, { useState, useEffect, useRef } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -27,6 +29,16 @@ const ParityDetailScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       ),
     });
+
+
+    reaction(() => userStore.me?.commentsCount, async (data, prev) => {
+      if (data < prev) {
+        const data = await comments.getComments(parity.id);
+        setCommentList([...data]);
+      }
+    });
+
+
   }, []);
 
   const renderItem = ({ item }) => {
@@ -71,6 +83,10 @@ const ParityDetailScreen = ({ navigation, route }) => {
         users.update(userStore.me.id, {
           commentsCount: userStore.me.commentsCount
         });
+
+        if (userStore.me.commentsCount === 3) {
+          StoreReview.requestReview();
+        }
 
         const data = await comments.getComments(parity.id);
         setCommentList([...data]);

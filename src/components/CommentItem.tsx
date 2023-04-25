@@ -29,7 +29,7 @@ const CommentItem = (props: CommentItemProps) => {
     const userModalRef = useRef<BottomDrawerMethods>(null);
     const feedbackModalRef = useRef<BottomDrawerMethods>(null);
     const { userStore } = useStore();
-    const { reports } = useFirestore();
+    const { reports, users } = useFirestore();
     const [isLiked, setIsLiked] = useState(userStore.isLikedComment(data.id));
 
 
@@ -64,7 +64,12 @@ const CommentItem = (props: CommentItemProps) => {
 
     const deleteComment = async () => {
         if (userStore.me?.id == data.user.id) {
-            comments.delete(data.id);
+            const deleted = comments.delete(data.id);
+            if (deleted) {
+                userStore.me.commentsCount--;
+                await userStore.setUser(userStore.me);
+                await users.update(userStore.me.id, { commentsCount: userStore.me.commentsCount });
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 import 'moment/locale/tr';
 import moment from 'moment';
+import { reaction } from 'mobx';
 import i18n from '../i18n/_i18n';
 import { useStore } from '../store';
 import { useFirestore } from '../db';
@@ -38,6 +39,15 @@ const ProfileScreen = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </>),
             headerLeft: () => (<></>),
+        });
+
+        reaction(() => userStore.me?.commentsCount, async (data, prev) => {
+            if (data != prev) {
+                comments.getCommentsByUserId(userStore.me.id).then((data) => {
+                    setCommentList(data);
+                    setLoading(false);
+                });
+            }
         });
 
     }, []);
