@@ -61,29 +61,12 @@ const SplashScreen = observer(({ navigation }) => {
 
 
       navigation.replace("Tab");
-      // navigation.navigate('TextArea', {
-      //   maxLength: 500,
-      //   minLength: 10,
-      //   title: i18n.t('txt_newComment'),
-      //   placeholder: i18n.t('txt_newCommentPlaceholder'),
-      //   buttonTitle: i18n.t('btn_newCommentSend'),
-      //   // extraData: { parity: Parities[0] },
-      //   // buttonLeftImage: Parities[8].image,
-      //   onSuccess: (text: string, extraData?: any) => {
-      //     navigation.goBack();
-      //     console.info("onSuccess", text);
-      //     // console.info("onSuccess", extraData);
-      //   },
-      //   onCancel: () => {
-      //     navigation.navigate("Tab");
-      //   }
-      // });
     }
   }, [initialData]);
 
   const fetchPublicIp = async () => {
     let controller = new AbortController()
-    setTimeout(() => controller.abort(), 1000);
+    setTimeout(() => controller.abort(), 2500);
     const resp = await fetch('https://api64.ipify.org', { signal: controller.signal });
     const text = await resp.text();
     if (!resp.ok) {
@@ -95,7 +78,6 @@ const SplashScreen = observer(({ navigation }) => {
   const getIP = async () => {
     const publicIP = await fetchPublicIp().catch(e => { return "" });
     const localIP = await DeviceInfo.getIpAddress().then(ip => { return ip });
-
     return { publicIP, localIP };
   }
 
