@@ -9,7 +9,7 @@ import * as StoreReview from 'react-native-store-review';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, { useState, useEffect, useRef } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { View, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { placeholder } from 'i18n-js';
 
 const ParityDetailScreen = ({ navigation, route }) => {
@@ -20,7 +20,6 @@ const ParityDetailScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
   const [commentList, setCommentList] = useState([]);
   const flatListRef = useRef(null);
-
 
   useEffect(() => {
     navigation.setOptions({
@@ -125,6 +124,9 @@ const ParityDetailScreen = ({ navigation, route }) => {
       <View style={styles.background}>
         <View style={styles.container}>
           <ParityCard data={parity} navigation={navigation} />
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>{i18n.t("lbl_UserReviews")}</Text>
+          </View>
           <FlatList
             ref={flatListRef}
             data={commentList}
@@ -214,5 +216,19 @@ const styles = StyleSheet.create({
     zIndex: 99999,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-  }
+  },
+  header: {
+    height: 50,
+    borderTopWidth: .7,
+    paddingHorizontal: 20,
+    borderBottomWidth: .7,
+    justifyContent: "center",
+    borderTopColor: color("color5"),
+    borderBottomColor: color("color5")
+  },
+  headerTitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: color("color8")
+  },
 });
