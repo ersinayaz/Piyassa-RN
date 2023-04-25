@@ -16,47 +16,52 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
             navigation.navigate('Login', { navigation, parity, from: "ParityDetail" });
             return;
         }
-        if (!isFollowings) {
-            const relationship = await relationships.create({
-                followerId: userStore.me.id,
-                followedId: user.id,
-            });
+        const anotherUser = await users.getById(user.id);
+
+        !isFollowings ? follow(anotherUser) : unfollow(anotherUser);
+    }
 
 
-            userStore.me.followersCount = userStore.me.followersCount + 1;
-            userStore.setUser(userStore.me);
-            await users.update(userStore.me.id, {
-                followersCount: userStore.me.followersCount
-            });
+    const follow = async (anotherUser) => {
 
+        const relationship = await relationships.create({
+            followerId: userStore.me.id,
+            followedId: anotherUser.id,
+        });
+        userStore.follow(relationship)
 
-            const anotherUser = await users.getById(user.id);
-            await users.update(anotherUser.id, {
-                followingsCount: anotherUser.followingsCount + 1
-            });
+        userStore.me.followersCount = userStore.me.followersCount + 1;
+        await userStore.setUser(userStore.me);
 
+        await users.update(userStore.me.id, {
+            followersCount: userStore.me.followersCount
+        });
 
-            userStore.follow(relationship);
-            modalRef.current.close();
-        } else {
-            const relationship = userStore.followings.find((relationship) => relationship.followedId === user.id);
-            await relationships.delete(relationship.id);
-            userStore.unFollow(user.id);
+        await users.update(anotherUser.id, {
+            followingsCount: anotherUser.followingsCount + 1
+        });
 
-            userStore.me.followersCount = userStore.me.followersCount - 1;
-            userStore.setUser(userStore.me);
-            await users.update(userStore.me.id, {
-                followersCount: userStore.me.followersCount
-            });
+        modalRef.current.close();
+    }
 
-            const anotherUser = await users.getById(user.id);
-            await users.update(anotherUser.id, {
-                followingsCount: anotherUser.followingsCount - 1
-            });
-            
+    const unfollow = async (anotherUser) => {
+        const relationship = userStore.followings.find((relationship) => relationship.followedId === anotherUser.id);
+        await relationships.delete(relationship.id);
 
-            modalRef.current.close();
-        }
+        userStore.unFollow(anotherUser.id);
+
+        userStore.me.followersCount = userStore.me.followersCount - 1;
+        await userStore.setUser(userStore.me);
+
+        await users.update(userStore.me.id, {
+            followersCount: userStore.me.followersCount
+        });
+
+        await users.update(anotherUser.id, {
+            followingsCount: anotherUser.followingsCount - 1
+        });
+
+        modalRef.current.close();
     }
 
     return (
