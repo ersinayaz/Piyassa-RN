@@ -67,7 +67,7 @@ const TextArea = ({ navigation, route }) => {
                 </View>
             </View>
 
-            <InputAccessoryView autoFocus={true} nativeID="newComment" style={{ height: 65, padding: 10 }} backgroundColor={"#d1d3d9"}>
+            <InputAccessoryView autoFocus={true} nativeID="newComment" style={{ height: 65, padding: 10 }} backgroundColor={color("keyboardArea")}>
                 <TouchableOpacity onPress={() => { onSuccess(text.split(), extraData); }} disabled={text.length < minLength ? true : false} style={[styles.btnNewComment, { backgroundColor: text.length < minLength ? color("color4") : color("color3"), flexDirection: "row" }]} >
                     <Text style={[styles.txtNewComment]}>{buttonTitle}</Text>
                     <View style={[styles.txtNewComment, styles.missingCharView, { display: text.length >= minLength ? "none" : "flex" }]}>

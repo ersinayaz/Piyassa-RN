@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: color("color3")
+    backgroundColor: color("color8")
   },
   loading: {
     position: "absolute",

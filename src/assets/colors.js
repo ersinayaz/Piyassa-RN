@@ -11,6 +11,7 @@ const Colors = {
         color7: '#9B9B9B',
         color8: '#4A4A4A',
         buttonText: "#FFFFFF",
+        keyboardArea: "#d1d3d9",
     },
     dark: {
         color1: '#252525',
@@ -22,6 +23,7 @@ const Colors = {
         color7: '#9B9B9B',
         color8: '#C5CACE',
         buttonText: "#FFFFFF",
+        keyboardArea: "#373737",
     }
 };
 

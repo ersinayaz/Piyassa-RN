@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     },
     headerTitle: {
         fontSize: 17,
-        color: color("color6"),
+        color: color("color4"),
     },
     headerRight: {
         right: 20,
@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 24,
         fontWeight: "bold",
+        color: color("color8"),
     },
     createdAt: {
         fontSize: 12,

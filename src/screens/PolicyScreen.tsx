@@ -35,6 +35,7 @@ const PolicyScreen = ({ navigation, route }) => {
                 <RenderHtml
                     contentWidth={width}
                     source={source}
+                    tagsStyles={{ p: { color: color('color8') } }}
                 />
             </ScrollView>
         </View>
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     },
     headerTitle: {
         fontSize: 17,
-        color: color("color6"),
+        color: color("color4"),
     },
     headerLeft: {
         left: 16,
