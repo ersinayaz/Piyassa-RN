@@ -221,6 +221,8 @@ const ParityDetailScreen = ({ navigation, route }) => {
                 await commentStore.dumpComments(parity.id, data);
                 setCommentList([...data]);
                 setRefreshing(false);
+                setNewCommentsCount(0);
+                setNewCommentsVisible(false);
               } catch (error) {
                 console.log(error);
                 setRefreshing(false);
