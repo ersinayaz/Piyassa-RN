@@ -28,29 +28,36 @@ const SplashScreen = observer(({ navigation }) => {
         parities: parities,
         deviceInfo: deviceData,
       };
+
       setInitialData(data);
     }
     init();
   }, []);
 
   const getParities = async () => {
-    const firebaseData = await parities.toList();
-
-    return Parities.map(p => {
-      const dbData = firebaseData.find(f => f.id === p.id);
-      return {
-        ...p,
-        price: dbData?.price,
-        closingPrice: dbData?.closingPrice,
-      }
-    });
+    try {
+      const firebaseData = await parities.toList();
+      return Parities.map(p => {
+        const dbData = firebaseData.find(f => f.id === p.id);
+        return {
+          ...p,
+          price: dbData?.price,
+          closingPrice: dbData?.closingPrice,
+        }
+      });
+    } catch (error) { console.log(error); return Parities }
   }
 
   const getFollowings = async () => {
     if (!userStore.me) return;
-    const followings = await relationships.getRelationships(userStore.me.id);
-    userStore.setRelationships(followings);
-    return followings;
+    try {
+      const followings = await relationships.getRelationships(userStore.me.id);
+      userStore.setRelationships(followings);
+      return followings;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
   }
 
   useEffect(() => {

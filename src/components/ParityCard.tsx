@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 export default ParityCard = ({ navigation, data }) => {
     return (
-        <TouchableOpacity onPress={() => { navigation.navigate("ParityDetail", { navigation, data }) }} style={styles.container}>
+        <TouchableOpacity activeOpacity={.7} onPress={() => { navigation.navigate("ParityDetail", { navigation, data }) }} style={styles.container}>
             <Image style={styles.image} source={data.image} />
             <View style={styles.center}>
                 <Text style={styles.title}>{data.name}</Text>

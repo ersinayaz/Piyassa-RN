@@ -14,12 +14,15 @@ import { placeholder } from 'i18n-js';
 
 const ParityDetailScreen = ({ navigation, route }) => {
   const parity = route.params?.data;
-  const { userStore } = useStore();
+  const { userStore, commentStore } = useStore();
   const { comments, users } = useFirestore();
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [commentList, setCommentList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [commentList, setCommentList] = useState(commentStore[parity.id]);
   const flatListRef = useRef(null);
+  const [newComments, setNewComments] = useState([]);
+  const [newCommentsCount, setNewCommentsCount] = useState(0);
+  const [newCommentsVisible, setNewCommentsVisible] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -30,16 +33,74 @@ const ParityDetailScreen = ({ navigation, route }) => {
       ),
     });
 
-
-    reaction(() => userStore.me?.commentsCount, async (data, prev) => {
-      if (data < prev) {
-        const data = await comments.getComments(parity.id);
-        setCommentList(data);
-      }
+    reaction(() => commentStore[parity.id], async (data, prev) => {
+      setCommentList(data);
     });
 
 
+    // reaction(() => userStore.me?.commentsCount, async (data, prev) => {
+    //   if (data < prev) {
+    //     const data = await comments.getComments(parity.id);
+    //     setCommentList(data);
+    //   }
+    // });
+
+    // const test = {
+    //   id: "test",
+    //   createdAt: Date.now(),
+    //   body: "t-"+Math.random().toString(36).substring(7),
+    //   isDeleted: false,
+    //   likeCount: 0,
+    //   parity: {
+    //     id: parity.id,
+    //     price: 0
+    //   },
+    //   user: {
+    //     id: userStore.me.id,
+    //     name: userStore.me.name,
+    //     email: userStore.me.email,
+    //     imageUri: userStore.me.imageUri
+    //   }
+    // };
+
+    // commentStore.getUserComments().then((data) => {
+    //   // console.log("data", data);
+    //   // commentStore.dumpUserComments(data.slice(0, 10))
+    // });
+    // // commentStore.deleteUserComment("test");
+
+    // commentStore.addComment(test);
+    // console.log("added", test);
+
+
   }, []);
+
+  useEffect(() => {
+    const getLiveComments = async () => {
+      try {
+        const data = await comments.getComments(parity.id);
+        await commentStore.dumpComments(parity.id, data);
+        setCommentList([...data]);
+      } catch (error) { }
+    }
+
+    getLiveComments();
+
+    return () => {
+      setCommentList([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    comments.onCreated((id, data) => {
+      if (data.parity.id == parity.id) {
+        setNewCommentsCount((prevCount) => prevCount + 1);
+        setNewCommentsVisible(true);
+      }
+    });
+
+  }, []);
+
 
   const renderItem = ({ item }) => {
     return (
@@ -75,7 +136,7 @@ const ParityDetailScreen = ({ navigation, route }) => {
     }
   };
 
-  const openNewCommentPopup = () => {
+  const openNewCommentPopup = async () => {
     navigation.navigate('TextArea', {
       title: i18n.t('txt_newComment'),
       placeholder: i18n.t('txt_newCommentPlaceholder'),
@@ -85,7 +146,7 @@ const ParityDetailScreen = ({ navigation, route }) => {
       onSuccess: async (text: string, extraData?: any) => {
         navigation.navigate('ParityDetail', { navigation, data: extraData.parity })
 
-        await comments.create({
+        const addedComment = await comments.create({
           body: text,
           isDeleted: false,
           likeCount: 0,
@@ -112,11 +173,22 @@ const ParityDetailScreen = ({ navigation, route }) => {
           StoreReview.requestReview();
         }
 
-        const data = await comments.getComments(parity.id);
-        setCommentList([...data]);
+        // const data = await comments.getComments(parity.id);
+        // setCommentList([...data]);
+        await commentStore.addComment(addedComment);
         flatListRef.current.scrollToIndex({ index: 0, animated: true });
       }
     });
+  }
+
+  const loadNewComments = async () => {
+    const data = await comments.getComments(parity.id);
+    await commentStore.dumpComments(parity.id, data);
+    // setNewComments([]);
+    setCommentList([...data]);
+    setNewCommentsCount(0);
+    setNewCommentsVisible(false);
+    flatListRef.current.scrollToIndex({ index: 0, animated: true });
   }
 
   return (
@@ -125,7 +197,14 @@ const ParityDetailScreen = ({ navigation, route }) => {
         <View style={styles.container}>
           <ParityCard data={parity} navigation={navigation} />
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>{i18n.t("lbl_UserReviews")}</Text>
+            {
+              newCommentsVisible == false ?
+                <Text style={styles.headerTitle}>{i18n.t("lbl_UserReviews")}</Text>
+                :
+                <TouchableOpacity onPress={loadNewComments} style={styles.headerButton}>
+                  <Text style={styles.headerButtonText}>{newCommentsCount}{" Yeni Gönderi"}</Text>
+                </TouchableOpacity>
+            }
           </View>
           <FlatList
             ref={flatListRef}
@@ -136,11 +215,18 @@ const ParityDetailScreen = ({ navigation, route }) => {
             showsHorizontalScrollIndicator={false}
             refreshing={refreshing}
             onRefresh={async () => {
-              setRefreshing(true);
-              const data = await comments.getComments(parity.id);
-              setCommentList([...data]);
-              setRefreshing(false);
+              try {
+                setRefreshing(true);
+                const data = await comments.getComments(parity.id);
+                await commentStore.dumpComments(parity.id, data);
+                setCommentList([...data]);
+                setRefreshing(false);
+              } catch (error) {
+                console.log(error);
+                setRefreshing(false);
+              }
             }}
+            initialNumToRender={10}
             keyExtractor={(item, index) => index.toString()}
             ListFooterComponent={() => (<View style={{ height: 5 }} />)}
             ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
@@ -174,6 +260,18 @@ const ParityDetailScreen = ({ navigation, route }) => {
 export default ParityDetailScreen;
 
 const styles = StyleSheet.create({
+  headerButton: {
+    backgroundColor: color("color2"),
+    borderRadius: 5,
+    paddingVertical: 7.5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerButtonText: {
+    color: color("color6"),
+    fontSize: 12,
+    fontWeight: "bold",
+  },
   background: {
     flex: 1,
     backgroundColor: color("color2"),

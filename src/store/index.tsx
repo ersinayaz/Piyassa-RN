@@ -3,16 +3,19 @@ import { useLocalObservable } from 'mobx-react';
 
 import userStore, { UserStore } from './UserStore';
 import deviceStore, { DeviceStore } from './DeviceStore';
+import commentStore, { CommentStore } from './CommentStore';
 
 
 type RootStore = {
   userStore: UserStore;
   deviceStore: DeviceStore;
+  commentStore: CommentStore;
 }
 
 const rootStore: RootStore = {
   userStore,
   deviceStore,
+  commentStore,
 };
 
 

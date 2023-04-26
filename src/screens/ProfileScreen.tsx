@@ -13,53 +13,88 @@ import { Text, View, StyleSheet, TouchableOpacity, Image, FlatList } from 'react
 moment.locale('tr');
 
 const ProfileScreen = ({ navigation, route }) => {
-    const { userStore } = useStore();
+    const { userStore, commentStore } = useStore();
     const { comments } = useFirestore();
     const [refreshing, setRefreshing] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [commentList, setCommentList] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [commentList, setCommentList] = useState(commentStore.userComments);
 
     useEffect(() => {
-        if (!userStore.me) {
-            navigation.navigate('Login', { from: 'Profile' });
-        }
-
-        navigation.addListener('focus', () => {
-            if (!userStore.me) {
+        const unsubscribe = navigation.addListener('focus', () => {
+            if (!userStore.me)
                 navigation.navigate('Login', { from: 'Profile' });
-            }
         });
 
         navigation.setOptions({
+            headerLeft: () => (<></>),
             headerTitle: () => (<><Text style={styles.headerTitle}>{i18n.t("txt_myProfile")}</Text></>),
             headerRight: () => (
                 <>
                     <TouchableOpacity onPress={() => { navigation.navigate("Settings"); }} style={styles.headerRight}>
                         <Ionicons color={color("buttonText")} name="ios-settings" size={20} />
                     </TouchableOpacity>
-                </>),
-            headerLeft: () => (<></>),
+                </>)
         });
 
-        reaction(() => userStore.me?.commentsCount, async (data, prev) => {
-            if (data != prev) {
-                comments.getCommentsByUserId(userStore.me.id).then((data) => {
-                    setCommentList(data);
-                    setLoading(false);
-                });
-            }
+        // reaction(() => userStore.me?.commentsCount, async (data, prev) => {
+        //     if (data != prev) {
+        //         comments.getCommentsByUserId(userStore.me.id).then((data) => {
+        //             setCommentList(data);
+        //             setLoading(false);
+        //         });
+        //     }
+        // });
+
+        // commentStore.getUserComments().then((data) => {
+        //     setCommentList(data);
+        // });
+
+        // comments.getCommentsByUserId(userStore.me.id).then((data) => {
+        //     commentStore.dumpUserComments(data);
+        // });
+
+        reaction(() => userStore.me?.followersCount, async (data, prev) => {
+            console.log("followersCount", data);
+            setCommentList(commentStore.userComments);
         });
+
+
+        reaction(() => commentStore.userComments, async (data, prev) => {
+            setCommentList(data);
+        });
+
+        return () => {
+            try {
+                unsubscribe.remove();
+            } catch (error) { }
+        }
 
     }, []);
 
+
+
+
+
+    // useEffect(() => {
+    //     // if (userStore.me) {
+    //     //     comments.getCommentsByUserId(userStore.me.id).then((data) => {
+    //     //         setCommentList(data);
+    //     //         setLoading(false);
+    //     //     });
+    //     // }
+    // }, [userStore.me]);
+
     useEffect(() => {
-        if (userStore.me) {
-            comments.getCommentsByUserId(userStore.me.id).then((data) => {
-                setCommentList(data);
-                setLoading(false);
-            });
+        const getLiveComments = async () => {
+            try {
+                const data = await comments.getCommentsByUserId(userStore.me.id);
+                await commentStore.dumpUserComments(data);
+                setCommentList([...data]);
+            } catch (error) { }
         }
-    }, [userStore.me]);
+
+        getLiveComments();
+    }, []);
 
 
     const counterItem = (title, count) => {
@@ -116,16 +151,19 @@ const ProfileScreen = ({ navigation, route }) => {
                         showsHorizontalScrollIndicator={false}
                         refreshing={refreshing}
                         onRefresh={async () => {
-                            setRefreshing(true);
-                            const data = await comments.getCommentsByUserId(userStore.me.id);
-                            setCommentList([...data]);
-                            setRefreshing(false);
+                            try {
+                                setRefreshing(true);
+                                const data = await comments.getCommentsByUserId(userStore.me.id);
+                                await commentStore.dumpUserComments(data);
+                                setCommentList([...data]);
+                                setRefreshing(false);
+                            } catch (error) {
+                                console.log(error);
+                                setRefreshing(false);
+                            }
                         }}
-                        ListHeaderComponent={() => (
-                            <View style={styles.counter}>
-                                {counterView()}
-                            </View>
-                        )}
+                        ListHeaderComponent={() => (<View style={styles.counter}>{counterView()}</View>)}
+                        initialNumToRender={10}
                         keyExtractor={(item, index) => index.toString()}
                         ListFooterComponent={() => (<View style={{ height: 250 }} />)}
                         ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
@@ -133,11 +171,11 @@ const ProfileScreen = ({ navigation, route }) => {
                         onEndReached={async () => {
                             const lastComment = commentList[commentList.length - 1];
                             const lastCommentCreatedAt = lastComment ? lastComment.createdAt : null;
-                            const data = await comments.getCommentsByUserId(userStore.me.id, lastCommentCreatedAt);
-                            setCommentList([...commentList, ...data]);
-                            setTimeout(() => {
-                                setLoading(false);
-                            }, 1);
+                            try {
+                                const data = await comments.getCommentsByUserId(userStore.me.id, lastCommentCreatedAt);
+                                setCommentList([...commentList, ...data]);
+                            } catch (error) { }
+                            setLoading(false)
                         }}
                     />
                 </View>

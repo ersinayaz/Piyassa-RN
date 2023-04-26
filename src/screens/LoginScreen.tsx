@@ -199,13 +199,11 @@ const LoginScreen = ({ navigation, route }) => {
         user.updatedAt = Date.now();
         user.notificationToken = await getNotificationToken();
         user.lastLoginIp = deviceStore.ip.publicIP;
-
         switch (provider) {
             case auth.FacebookAuthProvider.PROVIDER_ID: user.facebookId = data.user.uid; break;
             case auth.AppleAuthProvider.PROVIDER_ID: user.appleId = data.user.uid; break;
             case auth.GoogleAuthProvider.PROVIDER_ID: user.googleId = data.user.uid; break;
         }
-
         if (provider == auth.GoogleAuthProvider.PROVIDER_ID && data.user.photoURL) {
             user.imageUri = data.user.photoURL;
             user.imageUri = user.imageUri.replace("s96-c", "s400-c?i=1");
@@ -213,7 +211,6 @@ const LoginScreen = ({ navigation, route }) => {
         else if (provider == auth.FacebookAuthProvider.PROVIDER_ID && data.additionalUserInfo.profile.picture.data.url) {
             user.imageUri = await getFacebookProfilePicture(data.additionalUserInfo.profile.id);
         }
-
         await users.update(user.id, user);
         return user;
     }

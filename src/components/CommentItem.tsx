@@ -29,7 +29,7 @@ const CommentItem = (props: CommentItemProps) => {
     const { data, navigation, parity, profileScreen } = props;
     const userModalRef = useRef<BottomDrawerMethods>(null);
     const feedbackModalRef = useRef<BottomDrawerMethods>(null);
-    const { userStore } = useStore();
+    const { userStore, commentStore } = useStore();
     const { reports, users } = useFirestore();
     const [isLiked, setIsLiked] = useState(userStore.isLikedComment(data.id));
 
@@ -74,9 +74,12 @@ const CommentItem = (props: CommentItemProps) => {
         if (userStore.me?.id == data.user.id) {
             const deleted = comments.delete(data.id);
             if (deleted) {
-                userStore.me.commentsCount--;
+                if (userStore.me.commentsCount > 0) {
+                    userStore.me.commentsCount--;
+                }
                 await userStore.setUser(userStore.me);
                 await users.update(userStore.me.id, { commentsCount: userStore.me.commentsCount });
+                await commentStore.deleteComment(data.parity.id, data.id);
             }
         }
     }
@@ -118,14 +121,17 @@ const CommentItem = (props: CommentItemProps) => {
         if (profileScreen != true) {
             if (isLiked) {
                 userStore.unlikeComment(data.id);
-                data.likeCount--;
+                if (data.likeCount > 0) {
+                    data.likeCount--;
+                    commentStore.updateComment(data.parity.id, data);
+                }
                 setIsLiked(false);
             } else {
                 userStore.likeComment(data.id);
                 data.likeCount++;
+                commentStore.updateComment(data.parity.id, data);
                 setIsLiked(true);
             }
-
             comments.update(data.id, { likeCount: data.likeCount });
         }
     }
@@ -140,7 +146,7 @@ const CommentItem = (props: CommentItemProps) => {
                 profileScreen == true ?
                     <View style={styles.profileScreenInfoContainer}>
                         <Image source={getParity(parity.id).image} style={{ width: 18, height: 18 }} />
-                        <Text style={{ color: color("color8"), fontWeight: "500", marginLeft: 10 }}>{getParity(parity.id).description} Yorumu</Text>
+                        <Text style={{ color: color("color8"), fontWeight: "500", marginLeft: 10 }}>{getParity(parity.id).name} Yorumu</Text>
                     </View>
                     :
                     null

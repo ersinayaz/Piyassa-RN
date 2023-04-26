@@ -50,16 +50,20 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
 
         userStore.unFollow(anotherUser.id);
 
-        userStore.me.followersCount = userStore.me.followersCount - 1;
+        if (userStore.me.followersCount > 0) {
+            userStore.me.followersCount = userStore.me.followersCount - 1;
+        }
         await userStore.setUser(userStore.me);
 
         await users.update(userStore.me.id, {
             followersCount: userStore.me.followersCount
         });
 
-        await users.update(anotherUser.id, {
-            followingsCount: anotherUser.followingsCount - 1
-        });
+        if (anotherUser.followingsCount > 0) {
+            await users.update(anotherUser.id, {
+                followingsCount: anotherUser.followingsCount - 1
+            });
+        }
 
         modalRef.current.close();
     }

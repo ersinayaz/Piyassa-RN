@@ -82,8 +82,7 @@ export class FirestoreDatabase<T> {
 
     async onChangeById(id: string, callback: (data: T) => void): Promise<() => void> {
         return await firestore().collection(this.collectionName).doc(id).onSnapshot((snapshot) => {
-            if (snapshot.exists) {
-
+            if (snapshot && snapshot.exists) {
                 callback(snapshot.data());
             }
         });
@@ -148,7 +147,8 @@ export class FirestoreDatabase<T> {
         return result;
     }
 
-    async checkUserExist(email: string): Promise<T> {
+    async checkUserExist(email: string): Promise<T> 
+    {
         const snapshot = await firestore().collection(this.collectionName)
             .where('email', '==', email)
             .get();
