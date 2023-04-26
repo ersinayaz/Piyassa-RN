@@ -54,7 +54,6 @@ const ProfileScreen = ({ navigation, route }) => {
         // });
 
         reaction(() => userStore.me?.followersCount, async (data, prev) => {
-            console.log("followersCount", data);
             setCommentList(commentStore.userComments);
         });
 
