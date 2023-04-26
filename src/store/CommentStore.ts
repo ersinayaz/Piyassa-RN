@@ -35,6 +35,8 @@ export class CommentStore {
             dumpUserComments: action,
             addUserComment: action,
             deleteUserComment: action,
+            updateComment: action,
+            updateLikeCount: action,
         });
 
         this.getUserComments();
@@ -98,11 +100,26 @@ export class CommentStore {
 
     @action
     async updateComment(parityId: string, comment: Comment) {
-        const prevComments = await this.getComments(parityId);
+        const prevComments = this[parityId]; //await this.getComments(parityId);
         if (prevComments) {
             const index = prevComments.findIndex((comment) => comment.id === comment.id);
             if (index > -1) {
                 prevComments[index] = comment;
+            }
+        }
+        AsyncStorage.setItem(`comments_${parityId}`, JSON.stringify(prevComments));
+        runInAction(() => {
+            this[parityId] = prevComments;
+        });
+    }
+
+    @action
+    async updateLikeCount(parityId: string, commentId: string, likeCount: number) {
+        const prevComments = this[parityId]; //await this.getComments(parityId);
+        if (prevComments) {
+            const index = prevComments.findIndex((comment) => comment.id === commentId);
+            if (index > -1) {
+                prevComments[index].likeCount = likeCount;
             }
         }
         AsyncStorage.setItem(`comments_${parityId}`, JSON.stringify(prevComments));

@@ -114,7 +114,7 @@ const CommentItem = (props: CommentItemProps) => {
         }
     }
 
-    const likeOrUnlike = () => {
+    const likeOrUnlike = async () => {
         if (!userStore.me) return navigation.navigate('Login', { navigation, parity, from: "ParityDetail" });
 
         if (profileScreen != true) {
@@ -122,13 +122,14 @@ const CommentItem = (props: CommentItemProps) => {
                 userStore.unlikeComment(data.id);
                 if (data.likeCount > 0) {
                     data.likeCount--;
-                    commentStore.updateComment(data.parity.id, data);
+                    // await commentStore.updateComment(data.parity.id, data);
+                    await commentStore.updateLikeCount(data.parity.id, data.id, data.likeCount);
                 }
                 setIsLiked(false);
             } else {
                 userStore.likeComment(data.id);
                 data.likeCount++;
-                commentStore.updateComment(data.parity.id, data);
+                await commentStore.updateLikeCount(data.parity.id, data.id, data.likeCount);
                 setIsLiked(true);
             }
             comments.update(data.id, { likeCount: data.likeCount });
