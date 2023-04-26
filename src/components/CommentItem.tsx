@@ -53,7 +53,6 @@ const CommentItem = (props: CommentItemProps) => {
             {
                 cancelButtonIndex: 0,
                 destructiveButtonIndex: 3,
-                userInterfaceStyle: 'light',
                 title: i18n.t("txt_cdm_commentActionTitle"),
                 message: i18n.t("txt_cdm_commentActionDescription"),
                 options: options,
