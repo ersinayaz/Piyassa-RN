@@ -57,7 +57,14 @@ export class CommentStore {
                 this[parityId] = JSON.parse(comments);
             });
         }
-        return JSON.parse(comments);
+
+        try {
+            const entities = JSON.parse(comments);
+            const sorted = entities.sort((a, b) => a.createdAt - b.createdAt);
+            return sorted;
+        } catch (error) {
+            return [];
+        }
     }
 
     @action
