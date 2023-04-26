@@ -40,7 +40,7 @@ const HomeScreen = ({ navigation }) => {
                     />
                 </View>
             </View>
-            <BottomDrawer ref={notificationModal} initialHeight={350}>
+            <BottomDrawer customStyles={{ container: { backgroundColor: color("color6") } }} ref={notificationModal} initialHeight={350}>
                 <NotificationModal modalRef={notificationModal} />
             </BottomDrawer>
         </>
