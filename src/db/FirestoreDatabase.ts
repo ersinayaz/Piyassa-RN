@@ -60,6 +60,20 @@ export class FirestoreDatabase<T> {
             });
     }
 
+    async deleteByUserId(id: string): boolean {
+        return await firestore().collection(this.collectionName).where('user.id', '==', id).get()
+            .then((snapshot) => {
+                snapshot.forEach((doc) => {
+                    doc.ref.delete();
+                });
+                return true;
+            })
+            .catch((error) => {
+                console.log(error, data);
+                return false;
+            });
+    }
+
     async getById(id: string): Promise<T> {
         return await firestore().collection(this.collectionName).doc(id).get()
             .then((documentSnapshot) => {
@@ -147,8 +161,7 @@ export class FirestoreDatabase<T> {
         return result;
     }
 
-    async checkUserExist(email: string): Promise<T> 
-    {
+    async checkUserExist(email: string): Promise<T> {
         const snapshot = await firestore().collection(this.collectionName)
             .where('email', '==', email)
             .get();

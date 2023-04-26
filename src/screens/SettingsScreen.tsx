@@ -84,10 +84,11 @@ const SettingsScreen = ({ navigation, route }) => {
                 <Item icon={"ios-heart-outline"} title={i18n.t("lbl_settings_rateUs")} callback={rateUs} />
                 <Item icon={"lock-closed-outline"} title={i18n.t("lbl_settings_privacy")} callback={() => { navigation.navigate("Policy", { title: i18n.t("lbl_settings_privacy"), type: 1 }); }} />
                 <Item icon={"document-text-outline"} title={i18n.t("lbl_settings_terms")} callback={() => { navigation.navigate("Policy", { title: i18n.t("lbl_settings_terms"), type: 2 }); }} />
+                <Item icon={"ios-person-remove-outline"} title={i18n.t("lbl_settings_account_delete")} callback={() => { navigation.navigate("DeleteAccount"); }} />
                 <Item icon={"alert-circle-outline"} title={i18n.t("lbl_settings_about")} callback={() => { navigation.navigate("Policy", { title: i18n.t("lbl_settings_about"), type: 3 }); }} />
             </ScrollView>
             <Item logout icon={"ios-exit-outline"} title={i18n.t("lbl_settings_logout")} callback={signOut} />
-            <BottomDrawer ref={feedbackModalRef} initialHeight={350}>
+            <BottomDrawer customStyles={{ container: { backgroundColor: color("color6") } }} ref={feedbackModalRef} initialHeight={350}>
                 <FeedbackModal modalRef={feedbackModalRef} />
             </BottomDrawer>
         </View>

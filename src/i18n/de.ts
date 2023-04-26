@@ -99,10 +99,16 @@ const de = {
     lbl_settings_version: "Version",
     lbl_settings_rateUs: "Bewerten Sie uns",
     lbl_settings_logout: "Abmelden",
+    lbl_settings_account_delete: "Mein Konto dauerhaft löschen",
+    btn_account_delete:"Mein Konto löschen",
 
     // Page - TextArea :
     textAreaTitle: "Neuer Beitrag",
     textAreaPlaceholder: "Ihr Beitrag sollte keinerlei Beleidigungen, Verleumdungen, Herabsetzungen, Politik, Angriffe, Schimpfwörter oder ähnlich unangemessene Inhalte enthalten.",
     textAreaButtonTitle: "Senden",
+
+    // Page - Account Delete :
+    lbl_settings_account_delete_subTitle: "Konto löschen ist dauerhaft!",
+    lbl_settings_account_delete_description: "Dein Profil, Kommentare, Likes und Follower werden dauerhaft gelöscht."
 };
 export default de;

@@ -97,11 +97,16 @@ const tr = {
     lbl_settings_version: "Versiyon",
     lbl_settings_rateUs: "Piyassa'yı Oyla",
     lbl_settings_logout: "Çıkış Yap",
+    lbl_settings_account_delete: "Hesabımı Kalıcı Olarak Sil",
+    btn_account_delete: "Hesabımı Sil",
 
     // Page - TextArea :
     textAreaTitle: "Yeni Gönderi",
     textAreaPlaceholder: "Gönderinizin içeriğinde hakaret, karalama, aşağılama, siyaset, saldırı, küfür vb. şeyler kesinlikle bulunmamalıdır.",
     textAreaButtonTitle: "Gönder",
 
+    // Page - Account Delete :
+    lbl_settings_account_delete_subTitle: "Hesap silme işlemi kalıcıdır!",
+    lbl_settings_account_delete_description: "Profilin, yorumların, beğenmelerin ve takipçilerin kalıcı olarak silinecektir."
 };
 export default tr;

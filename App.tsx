@@ -21,6 +21,7 @@ import PolicyScreen from './src/screens/PolicyScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import ParityDetailScreen from './src/screens/ParityDetailScreen';
+import DeleteAccountScreen from './src/screens/DeleteAccountScreen';
 
 const MainStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -81,6 +82,7 @@ function App(): JSX.Element {
         <ProfileStack.Screen name="Profile" component={ProfileScreen} />
         <ProfileStack.Screen name="Settings" component={SettingsScreen} />
         <ProfileStack.Screen name="Policy" component={PolicyScreen} options={{ animationEnabled: true, presentation: "card", gestureEnabled: true }} />
+        <ProfileStack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ animationEnabled: true, presentation: "card", gestureEnabled: true }} />
       </ProfileStack.Navigator>
     )
   }

@@ -99,10 +99,16 @@ const en = {
     lbl_settings_version: "Version",
     lbl_settings_rateUs: "Rate Us",
     lbl_settings_logout: "Sign Out",
+    lbl_settings_account_delete: "Permanently Delete My Account",
+    btn_account_delete:"Delete Account",
 
     // Page - TextArea :
     textAreaTitle: "New Post",
     textAreaPlaceholder: "Your post should not contain any kind of insults, defamation, belittlement, politics, attacks, swearing, or similar inappropriate content.",
     textAreaButtonTitle: "Post",
+
+    // Page - Account Delete :
+    lbl_settings_account_delete_subTitle: "Account deletion is permanent!",
+    lbl_settings_account_delete_description: "Your profile, comments, likes, and followers will be permanently deleted."
 };
 export default en;
