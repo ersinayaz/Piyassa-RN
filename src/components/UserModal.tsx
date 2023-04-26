@@ -78,8 +78,8 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
             <View style={{ marginLeft: 20, justifyContent: "center" }}>
                 <Text style={styles.userName}>{user.name}</Text>
                 {userStore.me == null || userStore.me?.id != user.id ?
-                    <TouchableOpacity onPress={followOrUnfollow} style={[styles.btnNotification, { backgroundColor: isFollowings ? color("color8") : color("color2") }]}>
-                        <Ionicons name={isFollowings ? "remove" : "add"} size={20} color={color("color6")} />
+                    <TouchableOpacity onPress={followOrUnfollow} style={[styles.btnNotification, { backgroundColor: isFollowings ? color("color5") : color("color3") }]}>
+                        <Ionicons name={isFollowings ? "remove" : "add"} size={20} color={color("color8")} />
                         <Text style={styles.btnNotificationText}>{isFollowings ? i18n.t("txt_cdm_userUnFollow") : i18n.t("txt_cdm_userFollow")}</Text>
                     </TouchableOpacity>
                     :
@@ -99,7 +99,7 @@ export default UserModal;
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
     },
     userImage: {
         width: 92,
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     },
     btnNotificationText: {
         marginLeft: 5,
-        color: color("color6")
+        color: color("color8")
     }
 
 });

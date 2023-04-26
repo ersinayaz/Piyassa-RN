@@ -185,10 +185,10 @@ const CommentItem = (props: CommentItemProps) => {
             }
 
 
-            <BottomDrawer ref={userModalRef} initialHeight={150} openDuration={250} closeDuration={100}>
+            <BottomDrawer customStyles={{ container: { backgroundColor: color("color6") } }} ref={userModalRef} initialHeight={150} openDuration={250} closeDuration={100}>
                 <UserModal navigation={navigation} parity={parity} user={data.user} modalRef={userModalRef} />
             </BottomDrawer>
-            <BottomDrawer ref={feedbackModalRef} initialHeight={350}>
+            <BottomDrawer customStyles={{ container: { backgroundColor: color("color6") } }} ref={feedbackModalRef} initialHeight={350}>
                 <FeedbackModal modalRef={feedbackModalRef} />
             </BottomDrawer>
         </View>
