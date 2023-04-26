@@ -93,7 +93,9 @@ const ParityDetailScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     comments.onCreated((id, data) => {
-      if (data.parity.id == parity.id) {
+      if (data.parity.id == parity.id) 
+      {
+        if(data.user.id == userStore.me?.id) return;
         setNewCommentsCount((prevCount) => prevCount + 1);
         setNewCommentsVisible(true);
       }
