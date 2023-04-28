@@ -3,6 +3,7 @@ import { useStore } from '../store';
 import { useFirestore } from '../db';
 import React, { useState } from 'react';
 import { color } from '../assets/colors';
+import analytics from '@react-native-firebase/analytics';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -28,7 +29,11 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
             followerId: userStore.me.id,
             followedId: anotherUser.id,
         });
-        userStore.follow(relationship)
+        userStore.follow(relationship);
+        await analytics().logEvent('follow', {
+            follower_id: userStore.me.id,
+            followed_id: anotherUser.id,
+        });
 
         userStore.me.followersCount = userStore.me.followersCount + 1;
         await userStore.setUser(userStore.me);
@@ -49,6 +54,10 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
         await relationships.delete(relationship.id);
 
         userStore.unFollow(anotherUser.id);
+        await analytics().logEvent('unfollow', {
+            follower_id: userStore.me.id,
+            followed_id: anotherUser.id,
+        });
 
         if (userStore.me.followersCount > 0) {
             userStore.me.followersCount = userStore.me.followersCount - 1;

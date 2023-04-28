@@ -4,6 +4,7 @@ import { useFirestore } from '../db';
 import { color } from '../assets/colors';
 import Lottie from 'lottie-react-native';
 import messaging from '@react-native-firebase/messaging';
+import analytics from '@react-native-firebase/analytics';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -21,6 +22,10 @@ const NotificationModal = ({ modalRef }) => {
         });
         if (messagingStatus === messaging.AuthorizationStatus.AUTHORIZED || messagingStatus === messaging.AuthorizationStatus.PROVISIONAL) {
             const token = await messaging().getToken();
+            await analytics().logEvent('notification_permission', {
+                status: messagingStatus,
+                user_id: userStore.me?.id,
+            });
             if (userStore.me) {
                 const u = userStore.me;
                 u.notificationToken = token;

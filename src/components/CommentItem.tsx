@@ -10,6 +10,7 @@ import { color } from '../assets/colors';
 import FeedbackModal from './FeedbackModal';
 import ParityCard from '../components/ParityCard';
 import { comments } from '../db/FirestoreDatabase';
+import analytics from '@react-native-firebase/analytics';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, { useState, useEffect, useRef } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -71,8 +72,18 @@ const CommentItem = (props: CommentItemProps) => {
 
     const deleteComment = async () => {
         if (userStore.me?.id == data.user.id) {
+            const _comment_id = data.id;
+            const _comment_body = data.body;
+
             const deleted = comments.delete(data.id);
             if (deleted) {
+                await analytics().logEvent('comment_delete', {
+                    parity_id: parity.id,
+                    parity_name: parity.name,
+                    comment_id: _comment_id,
+                    comment_body: _comment_body,
+                    user_id: userStore.me?.id
+                });
                 if (userStore.me.commentsCount > 0) {
                     userStore.me.commentsCount--;
                 }
@@ -89,6 +100,13 @@ const CommentItem = (props: CommentItemProps) => {
             commentId: data.id,
             userId: userStore.me?.id || null,
         });
+        await analytics().logEvent('comment_report', {
+            parity_id: parity.id,
+            parity_name: parity.name,
+            comment_id: data.id,
+            comment_body: data.body,
+            user_id: userStore.me?.id
+        });
         feedbackModalRef.current.open();
     }
 
@@ -104,6 +122,16 @@ const CommentItem = (props: CommentItemProps) => {
                 if (result.activityType) {
                     // shared with activity type of result.activityType
                 } else {
+                    await analytics().logShare({
+                        contentType: 'comment',
+                        itemId: data.id,
+                        method: 'share',
+                        content: data.body,
+                        success: true,
+                        user_id: userStore.me?.id,
+                        parity_id: parity.id,
+                        parity_name: parity.name
+                    });
                     // shared
                 }
             } else if (result.action === Share.dismissedAction) {
@@ -119,6 +147,13 @@ const CommentItem = (props: CommentItemProps) => {
 
         if (profileScreen != true) {
             if (isLiked) {
+                await analytics().logEvent('comment_unlike', {
+                    parity_id: parity.id,
+                    parity_name: parity.name,
+                    comment_id: data.id,
+                    comment_body: data.body,
+                    user_id: userStore.me?.id
+                });
                 userStore.unlikeComment(data.id);
                 if (data.likeCount > 0) {
                     data.likeCount--;
@@ -127,6 +162,13 @@ const CommentItem = (props: CommentItemProps) => {
                 }
                 setIsLiked(false);
             } else {
+                await analytics().logEvent('comment_like', {
+                    parity_id: parity.id,
+                    parity_name: parity.name,
+                    comment_id: data.id,
+                    comment_body: data.body,
+                    user_id: userStore.me?.id
+                });
                 userStore.likeComment(data.id);
                 data.likeCount++;
                 await commentStore.updateLikeCount(data.parity.id, data.id, data.likeCount);

@@ -4,6 +4,7 @@ import { useFirestore } from '../db';
 import { color } from '../assets/colors';
 import auth from '@react-native-firebase/auth';
 import FeedbackModal from '../components/FeedbackModal';
+import analytics from '@react-native-firebase/analytics';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, { useState, useEffect, useRef } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -68,12 +69,24 @@ const SettingsScreen = ({ navigation, route }) => {
 
     const signOut = async () => {
         await auth().signOut().finally(async () => {
+            await analytics().logEvent('sign_out', {
+                screen: 'Settings',
+                method: userStore.me?.lastProvider,
+                user_id: userStore.me?.id,
+                os: userStore.me?.deviceData.os,
+            });
             await userStore.logout();
             navigation.goBack();
         });
     }
 
-    const rateUs = () => {
+    const rateUs = async () => {
+        await analytics().logEvent('rate_us', {
+            screen: 'Settings',
+            provider: userStore.me?.lastProvider,
+            user_id: userStore.me?.id,
+            os: userStore.me?.deviceData.os,
+        });
         Linking.openURL(STORE_LINK);
     }
 

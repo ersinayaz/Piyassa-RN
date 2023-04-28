@@ -5,6 +5,7 @@ import { useFirestore } from '../db';
 import { color } from '../assets/colors';
 import ParityCard from '../components/ParityCard';
 import CommentItem from '../components/CommentItem';
+import analytics from '@react-native-firebase/analytics';
 import * as StoreReview from 'react-native-store-review';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, { useState, useEffect, useRef } from 'react';
@@ -73,6 +74,11 @@ const ParityDetailScreen = ({ navigation, route }) => {
     // console.log("added", test);
 
 
+    analytics().logViewItemList({
+      item_list_id: parity.id,
+      item_list_name: parity.name
+    });
+
   }, []);
 
   useEffect(() => {
@@ -95,7 +101,7 @@ const ParityDetailScreen = ({ navigation, route }) => {
     comments.onCreated((id, data) => {
       if (data.parity.id == parity.id) {
         if (data.user.id == userStore.me?.id) return;
-        
+
         setNewCommentsCount((prevCount) => prevCount + 1);
         setNewCommentsVisible(true);
       }
@@ -164,6 +170,14 @@ const ParityDetailScreen = ({ navigation, route }) => {
           }
         });
 
+        await analytics().logEvent("comment_add", {
+          parity_id: parity.id,
+          parity_name: parity.name,
+          user_id: userStore.me.id,
+          user_name: userStore.me.name,
+          content: text
+        });
+ 
         userStore.me.commentsCount = userStore.me.commentsCount + 1;
         userStore.setUser(userStore.me);
 

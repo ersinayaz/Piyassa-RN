@@ -7,6 +7,7 @@ import { color } from '../assets/colors';
 import { DeviceData, Parities } from '../models';
 import DeviceInfo from 'react-native-device-info';
 import React, { useState, useEffect } from 'react';
+import analytics from '@react-native-firebase/analytics';
 import { View, StyleSheet, Image, AppState } from 'react-native';
 
 
@@ -28,6 +29,30 @@ const SplashScreen = observer(({ navigation }) => {
         parities: parities,
         deviceInfo: deviceData,
       };
+
+      await analytics().logAppOpen();
+      if (userStore.me) {
+        await analytics().setUserId(userStore.me.id);
+        await analytics().setUserProperties({
+          name: userStore.me.name,
+          email: userStore.me.email,
+          provider: userStore.me.lastProvider,
+          appleId: userStore.me.appleId,
+          facebookId: userStore.me.facebookId,
+          googleId: userStore.me.googleId,
+          appVersion: userStore.me.appVersion,
+          country: userStore.me.country,
+          language: userStore.me.language,
+          carrier: userStore.me.deviceData.carrier,
+          timeZone: userStore.me.deviceData.timeZone.toString(),
+          os: userStore.me.deviceData.os,
+          brand: userStore.me.deviceData.brand,
+          model: userStore.me.deviceData.model,
+          hasNotch: userStore.me.deviceData.hasNotch.toString(),
+          isEmulator: userStore.me.deviceData.isEmulator.toString(),
+          isTablet: userStore.me.deviceData.isTablet.toString(),
+        });
+      }
 
       setInitialData(data);
     }
@@ -65,8 +90,6 @@ const SplashScreen = observer(({ navigation }) => {
       deviceStore.setData(initialData.deviceInfo);
       deviceStore.setIP(initialData.ip);
       deviceStore.setParities(initialData.parities);
-
-
       navigation.replace("Tab");
     }
   }, [initialData]);

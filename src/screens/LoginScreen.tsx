@@ -7,6 +7,7 @@ import auth from '@react-native-firebase/auth';
 import React, { useState, useEffect } from 'react';
 import * as RNLocalize from "react-native-localize";
 import messaging from '@react-native-firebase/messaging';
+import analytics from '@react-native-firebase/analytics';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -60,11 +61,12 @@ const LoginScreen = ({ navigation, route }) => {
     }
 
     const socialLogin = async (name) => {
+        await analytics().logEvent('login_press', { provider: name });
         setLoading(true);
         switch (name) {
-            case "google": await onGoogleButtonPress(); break;
-            case "apple": await onAppleButtonPress(); break;
-            case "facebook": await onFacebookButtonPress(); break;
+            case "google.com": await onGoogleButtonPress(); break;
+            case "apple.com": await onAppleButtonPress(); break;
+            case "facebook.com": await onFacebookButtonPress(); break;
         }
     }
 
@@ -149,6 +151,26 @@ const LoginScreen = ({ navigation, route }) => {
             user = await userCreate(provider, data, _fullName);
         }
         setLoading(false);
+        await analytics().setUserId(user.id);
+        await analytics().setUserProperties({
+            name: user.name,
+            email: user.email,
+            provider: provider,
+            appleId: user.appleId,
+            facebookId: user.facebookId,
+            googleId: user.googleId,
+            appVersion: user.appVersion,
+            country: user.country,
+            language: user.language,
+            carrier: user.deviceData.carrier,
+            timeZone: user.deviceData.timeZone.toString(),
+            os: user.deviceData.os,
+            brand: user.deviceData.brand,
+            model: user.deviceData.model,
+            hasNotch: user.deviceData.hasNotch.toString(),
+            isEmulator: user.deviceData.isEmulator.toString(),
+            isTablet: user.deviceData.isTablet.toString(),
+        });
         await userStore.setUser(user);
 
         if (route.params?.from == "ParityDetail")
@@ -198,8 +220,12 @@ const LoginScreen = ({ navigation, route }) => {
         else if (provider == auth.FacebookAuthProvider.PROVIDER_ID && data.additionalUserInfo.profile.picture.data.url) {
             user.imageUri = await getFacebookProfilePicture(data.additionalUserInfo.profile.id);
         }
-
         await users.create(user);
+
+        await analytics().logSignUp({
+            method: provider
+        });
+
         return user;
     }
 
@@ -225,6 +251,9 @@ const LoginScreen = ({ navigation, route }) => {
             user.imageUri = await getFacebookProfilePicture(data.additionalUserInfo.profile.id);
         }
         await users.update(user.id, user);
+        await analytics().logLogin({
+            method: provider
+        });
         return user;
     }
 
@@ -239,13 +268,13 @@ const LoginScreen = ({ navigation, route }) => {
                 <Text style={[styles.text, styles.txtTitle]}>{i18n.t("login_txt_title")}</Text>
                 <Text style={[styles.text, styles.txtDescription]}>{i18n.t("login_txt_description")}</Text>
                 <View style={styles.socialButtons}>
-                    <TouchableOpacity style={styles.btnSocial} onPress={() => socialLogin("facebook")}>
+                    <TouchableOpacity style={styles.btnSocial} onPress={() => socialLogin("facebook.com")}>
                         <Image source={require('../assets/images/login-providers/facebook.png')} style={styles.socialIcon} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.btnSocial} onPress={() => socialLogin("google")}>
+                    <TouchableOpacity style={styles.btnSocial} onPress={() => socialLogin("google.com")}>
                         <Image source={require('../assets/images/login-providers/google.png')} style={styles.socialIcon} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.btnSocial} onPress={() => socialLogin("apple")}>
+                    <TouchableOpacity style={styles.btnSocial} onPress={() => socialLogin("apple.com")}>
                         <Image source={require('../assets/images/login-providers/apple.png')} style={styles.socialIcon} />
                     </TouchableOpacity>
                 </View>

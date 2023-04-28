@@ -4,6 +4,7 @@ import { useFirestore } from '../db';
 import { color } from '../assets/colors';
 import auth from '@react-native-firebase/auth';
 import React, { useState, useEffect } from 'react';
+import analytics from '@react-native-firebase/analytics';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Text, View, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 
@@ -38,6 +39,13 @@ const DeleteAccountScreen = ({ navigation, route }) => {
                 },
                 {
                     text: i18n.t("btn_account_delete"), onPress: async () => {
+                        await analytics().logEvent('delete_account', {
+                            method: userStore.me?.lastProvider,
+                            user_id: userStore.me?.id,
+                            name: userStore.me?.name,
+                            email: userStore.me?.email,
+                            os: userStore.me?.deviceData.os
+                        });
                         const userId = userStore.me.id;
                         await users.delete(userId);
                         await comments.deleteByUserId(userId);
