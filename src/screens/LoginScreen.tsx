@@ -83,7 +83,7 @@ const LoginScreen = ({ navigation, route }) => {
                         facebookAccessToken = data.accessToken;
                         const credential = auth.FacebookAuthProvider.credential(data.accessToken);
                         auth().signInWithCredential(credential).then((user) => {
-                            onSuccessfulLogin(auth.FacebookAuthProvider.PROVIDER_ID, user);
+                            onSuccessfulLogin(auth.FacebookAuthProvider.PROVIDER_ID, user, null);
                         }).catch((err) => {
                             errorHandling(auth.FacebookAuthProvider.PROVIDER_ID, err);
                         });
@@ -106,10 +106,19 @@ const LoginScreen = ({ navigation, route }) => {
                 requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
             });
 
-            const { identityToken, nonce } = appleAuthRequestResponse;
+            const { identityToken, nonce, fullName, email } = appleAuthRequestResponse;
             const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
+
+            let fullName_ = '';
+            if (fullName.namePrefix) fullName_ = fullName_ + fullName.namePrefix + ' ';
+            if (fullName.givenName) fullName_ = fullName_ + fullName.givenName + ' ';
+            if (fullName.familyName) fullName_ = fullName_ + fullName.familyName + ' ';
+            if (fullName.nickname) fullName_ = fullName_ + fullName.nickname + ' ';
+            if (fullName.middleName) fullName_ = fullName_ + fullName.middleName + ' ';
+            if (fullName.nameSuffix) fullName_ = fullName_ + fullName.nameSuffix + ' ';
+
             auth().signInWithCredential(appleCredential).then((user) => {
-                onSuccessfulLogin(auth.AppleAuthProvider.PROVIDER_ID, user);
+                onSuccessfulLogin(auth.AppleAuthProvider.PROVIDER_ID, user, fullName_);
             }).catch((err) => errorHandling(auth.AppleAuthProvider.PROVIDER_ID, err));
         } catch (err) {
             errorHandling(auth.AppleAuthProvider.PROVIDER_ID, err);
@@ -122,7 +131,7 @@ const LoginScreen = ({ navigation, route }) => {
             const userInfo = await GoogleSignin.signIn();
             const googleCredential = auth.GoogleAuthProvider.credential(userInfo.idToken);
             auth().signInWithCredential(googleCredential).then((user) => {
-                onSuccessfulLogin(auth.GoogleAuthProvider.PROVIDER_ID, user);
+                onSuccessfulLogin(auth.GoogleAuthProvider.PROVIDER_ID, user, null);
             }
             ).catch((err) => errorHandling(auth.GoogleAuthProvider.PROVIDER_ID, err));
         } catch (err) {
@@ -130,14 +139,14 @@ const LoginScreen = ({ navigation, route }) => {
         }
     };
 
-    const onSuccessfulLogin = async (provider, data) => {
+    const onSuccessfulLogin = async (provider, data, _fullName) => {
         const userExist = await users.checkUserExist(data.additionalUserInfo.profile.email);
         let user = {};
         if (userExist) {
             user = await updateUserData(provider, data, userExist);
         }
         else {
-            user = await userCreate(provider, data);
+            user = await userCreate(provider, data, _fullName);
         }
         setLoading(false);
         await userStore.setUser(user);
@@ -148,7 +157,7 @@ const LoginScreen = ({ navigation, route }) => {
             navigation.navigate("Profile", { data: userStore.me });
     }
 
-    const userCreate = async (provider, data) => {
+    const userCreate = async (provider, data, _fullName) => {
         const user = {
             id: data.user.uid,
             name: data.user.displayName,
@@ -172,6 +181,10 @@ const LoginScreen = ({ navigation, route }) => {
             followingsCount: 0,
             commentsCount: 0,
         } as User;
+
+        if (provider == auth.AppleAuthProvider.PROVIDER_ID && _fullName) {
+            user.name = _fullName;
+        }
 
         switch (provider) {
             case auth.FacebookAuthProvider.PROVIDER_ID: user.facebookId = data.user.uid; break;
