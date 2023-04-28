@@ -16,6 +16,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A5C7244B29EC628B005BD0C6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A5C7244A29EC628B005BD0C6 /* GoogleService-Info.plist */; };
 		A5D64D3D29EC634A00073B2D /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D64D3C29EC634A00073B2D /* File.swift */; };
+		A5E5CB5F29FB9C42000AD1BC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A5E5CB6129FB9C42000AD1BC /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,9 @@
 		A5C7244A29EC628B005BD0C6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../react-native/PiyassaClient/ios/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A5D64D3B29EC634900073B2D /* Piyassa-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Piyassa-Bridging-Header.h"; sourceTree = "<group>"; };
 		A5D64D3C29EC634A00073B2D /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		A5E5CB6029FB9C42000AD1BC /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A5E5CB6229FB9C45000AD1BC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A5E5CB6329FB9C47000AD1BC /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A5F7781D29EF168600E4133B /* Piyassa.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Piyassa.entitlements; path = Piyassa/Piyassa.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -99,6 +103,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				A5E5CB6129FB9C42000AD1BC /* Localizable.strings */,
 			);
 			name = Piyassa;
 			sourceTree = "<group>";
@@ -224,11 +229,13 @@
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Piyassa" */;
 			compatibilityVersion = "Xcode 12.0";
-			developmentRegion = en;
+			developmentRegion = tr;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				tr,
+				de,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
@@ -254,6 +261,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				A5E5CB5F29FB9C42000AD1BC /* Localizable.strings in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				A5C7244B29EC628B005BD0C6 /* GoogleService-Info.plist in Resources */,
 			);
@@ -453,6 +461,19 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		A5E5CB6129FB9C42000AD1BC /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A5E5CB6029FB9C42000AD1BC /* tr */,
+				A5E5CB6229FB9C45000AD1BC /* en */,
+				A5E5CB6329FB9C47000AD1BC /* de */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -514,7 +535,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Piyassa/Piyassa.entitlements;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = PNAQFRZAZ8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Piyassa/Info.plist;
@@ -524,7 +545,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -546,7 +567,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Piyassa/Piyassa.entitlements;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = PNAQFRZAZ8;
 				INFOPLIST_FILE = Piyassa/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Piyassa;
@@ -555,7 +576,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
