@@ -3,6 +3,7 @@ import { useStore } from '../store';
 import { useFirestore } from '../db';
 import { User } from '../models/User';
 import { color } from '../assets/colors';
+import packageJson from '../../package.json';
 import auth from '@react-native-firebase/auth';
 import React, { useState, useEffect } from 'react';
 import * as RNLocalize from "react-native-localize";
@@ -193,7 +194,7 @@ const LoginScreen = ({ navigation, route }) => {
             facebookId: '',
             googleId: '',
             isBlocked: false,
-            appVersion: '1.0.0',
+            appVersion: packageJson.version,
             country: RNLocalize.getLocales()[0].countryCode,
             language: RNLocalize.getLocales()[0].languageCode,
             registerIp: deviceStore.ip.publicIP,
@@ -236,6 +237,8 @@ const LoginScreen = ({ navigation, route }) => {
         }
         user.lastProvider = provider;
         user.updatedAt = Date.now();
+        appVersion: packageJson.version;
+        
         user.notificationToken = await getNotificationToken();
         user.lastLoginIp = deviceStore.ip.publicIP;
         switch (provider) {
