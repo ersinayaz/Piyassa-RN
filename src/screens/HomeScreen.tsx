@@ -2,6 +2,7 @@ import { useStore } from '../store';
 import { color } from '../assets/colors';
 import React, { useEffect, useRef } from 'react';
 import ParityCard from '../components/ParityCard';
+import useColorScheme from '../assets/useColorScheme';
 import messaging from '@react-native-firebase/messaging';
 import { View, StyleSheet, FlatList } from 'react-native';
 import NotificationModal from '../components/NotificationModal';
@@ -10,7 +11,28 @@ import BottomDrawer, { BottomDrawerMethods } from 'react-native-animated-bottom-
 const HomeScreen = ({ navigation }) => {
     const { deviceStore } = useStore();
     const notificationModal = useRef<BottomDrawerMethods>(null);
-
+    const colorScheme = useColorScheme();
+    const styles = StyleSheet.create({
+        background: {
+            flex: 1,
+            backgroundColor: color("color2"),
+        },
+        container: {
+            flex: 1,
+            borderTopLeftRadius: 24,
+            borderTopRightRadius: 24,
+            backgroundColor: color("color6"),
+        },
+        flatlist: {
+            flex: 1,
+            marginTop: 5
+        },
+        itemSeparator: {
+            height: .7,
+            backgroundColor: color("color5"),
+        },
+    });
+    
     useEffect(() => {
 
         const notificationCheck = async () => {
@@ -48,24 +70,3 @@ const HomeScreen = ({ navigation }) => {
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        backgroundColor: color("color2"),
-    },
-    container: {
-        flex: 1,
-        borderTopLeftRadius: 24,
-        borderTopRightRadius: 24,
-        backgroundColor: color("color6"),
-    },
-    flatlist: {
-        flex: 1,
-        marginTop: 5
-    },
-    itemSeparator: {
-        height: .7,
-        backgroundColor: color("color5"),
-    },
-});

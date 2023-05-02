@@ -1,8 +1,37 @@
 import ParityPrice from './ParityPrice';
 import { color } from '../assets/colors';
+import useColorScheme from '../assets/useColorScheme';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 export default ParityCard = ({ navigation, data }) => {
+    const colorScheme = useColorScheme();
+    const styles = StyleSheet.create({
+        container: {
+            height: 73.5,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+        },
+        center: {
+            flex: 1,
+            marginLeft: 20
+        },
+        image: {
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+        },
+        title: {
+            fontSize: 17,
+            fontWeight: 'bold',
+            color: color("color8"),
+        },
+        description: {
+            fontSize: 12,
+            color: color("color7"),
+        },
+    });
+    
     return (
         <TouchableOpacity activeOpacity={.7} onPress={() => { navigation.navigate("ParityDetail", { navigation, data }) }} style={styles.container}>
             <Image style={styles.image} source={data.image} />
@@ -16,30 +45,3 @@ export default ParityCard = ({ navigation, data }) => {
         </TouchableOpacity>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        height: 73.5,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-    },
-    center: {
-        flex: 1,
-        marginLeft: 20
-    },
-    image: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-    },
-    title: {
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: color("color8"),
-    },
-    description: {
-        fontSize: 12,
-        color: color("color7"),
-    },
-});

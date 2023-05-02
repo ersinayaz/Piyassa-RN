@@ -2,6 +2,7 @@ import { useStore } from '../store';
 import { useFirestore } from '../db';
 import { color } from '../assets/colors';
 import React, { useState, useEffect } from 'react';
+import useColorScheme from '../assets/useColorScheme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
@@ -18,6 +19,50 @@ enum ChangeState {
 
 const ParityPrice = (props: ParityPriceProps) => {
     const { parities } = useFirestore();
+    const colorScheme = useColorScheme();
+    const styles = StyleSheet.create({
+        container: {
+        },
+        lastPrice: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+        },
+        changeRate: {
+            marginTop: 5,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+        },
+        icon: {
+            width: 14,
+            height: 14,
+            marginLeft: 5,
+        },
+        rate: {
+            fontSize: 10,
+            fontWeight: '500'
+        },
+        price: {
+            fontSize: 16,
+            marginLeft: 5,
+            fontWeight: 'bold'
+        },
+        priceChar: {
+            fontSize: 12,
+            fontWeight: '500',
+        },
+        up: {
+            color: "#00B75F",
+        },
+        down: {
+            color: "#D80027",
+        },
+        equal: {
+            color: color("color7"),
+        },
+    });
+
     const calculateRate = (lastPrice) => {
         const changeRate = Math.abs(((props.data.closingPrice - lastPrice) / lastPrice) * 100).toFixed(2);
         const state = props.data.closingPrice < lastPrice ? ChangeState.up : props.data.closingPrice > lastPrice ? ChangeState.down : ChangeState.equal;
@@ -98,46 +143,3 @@ const ParityPrice = (props: ParityPriceProps) => {
 };
 
 export default ParityPrice;
-
-const styles = StyleSheet.create({
-    container: {
-    },
-    lastPrice: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-    },
-    changeRate: {
-        marginTop: 5,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-    },
-    icon: {
-        width: 14,
-        height: 14,
-        marginLeft: 5,
-    },
-    rate: {
-        fontSize: 10,
-        fontWeight: '500'
-    },
-    price: {
-        fontSize: 16,
-        marginLeft: 5,
-        fontWeight: 'bold'
-    },
-    priceChar: {
-        fontSize: 12,
-        fontWeight: '500',
-    },
-    up: {
-        color: "#00B75F",
-    },
-    down: {
-        color: "#D80027",
-    },
-    equal: {
-        color: color("color7"),
-    },
-});

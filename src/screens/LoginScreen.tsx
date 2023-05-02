@@ -7,6 +7,7 @@ import packageJson from '../../package.json';
 import auth from '@react-native-firebase/auth';
 import React, { useState, useEffect } from 'react';
 import * as RNLocalize from "react-native-localize";
+import useColorScheme from '../assets/useColorScheme';
 import messaging from '@react-native-firebase/messaging';
 import analytics from '@react-native-firebase/analytics';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -21,6 +22,78 @@ const LoginScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);
     const { userStore, deviceStore } = useStore();
     const { users } = useFirestore();
+    const colorScheme = useColorScheme();
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: color('color6'),
+        },
+        image: {
+            flex: 2,
+            width: "100%",
+            resizeMode: 'contain',
+        },
+        form: {
+            flex: 0,
+            padding: 16,
+        },
+        text: {
+            textAlign: "center"
+        },
+        txtTitle: {
+            fontSize: 22,
+            fontWeight: "bold",
+            color: color("color8")
+        },
+        txtDescription: {
+            padding: 20,
+            fontSize: 14,
+            lineHeight: 21,
+            color: color("color7")
+        },
+        btnSocial: {
+            height: 50,
+            justifyContent: "center",
+        },
+        back: {
+            top: 16,
+            right: 16,
+            width: 36,
+            zIndex: 2,
+            height: 36,
+            padding: 5,
+            borderRadius: 36,
+            alignItems: "center",
+            position: "absolute",
+            justifyContent: "center",
+            backgroundColor: color("color5"),
+        },
+        socialIcon: {
+            width: 50,
+            resizeMode: 'contain',
+        },
+        logo: {
+            marginTop: -20,
+            width: 145,
+            resizeMode: 'contain'
+        },
+        socialButtons:
+        {
+            paddingBottom: 30,
+            flexDirection: "row",
+            justifyContent: "space-evenly"
+        },
+        activityIndicator: {
+            flex: 1,
+            zIndex: 9999,
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            backgroundColor: "#00000090"
+        }
+    });
 
     const goBack = () => {
         if (route.params?.from != null) {
@@ -288,75 +361,3 @@ const LoginScreen = ({ navigation, route }) => {
 };
 
 export default LoginScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: color('color6'),
-    },
-    image: {
-        flex: 2,
-        width: "100%",
-        resizeMode: 'contain',
-    },
-    form: {
-        flex: 0,
-        padding: 16,
-    },
-    text: {
-        textAlign: "center"
-    },
-    txtTitle: {
-        fontSize: 22,
-        fontWeight: "bold",
-        color: color("color8")
-    },
-    txtDescription: {
-        padding: 20,
-        fontSize: 14,
-        lineHeight: 21,
-        color: color("color7")
-    },
-    btnSocial: {
-        height: 50,
-        justifyContent: "center",
-    },
-    back: {
-        top: 16,
-        right: 16,
-        width: 36,
-        zIndex: 2,
-        height: 36,
-        padding: 5,
-        borderRadius: 36,
-        alignItems: "center",
-        position: "absolute",
-        justifyContent: "center",
-        backgroundColor: color("color5"),
-    },
-    socialIcon: {
-        width: 50,
-        resizeMode: 'contain',
-    },
-    logo: {
-        marginTop: -20,
-        width: 145,
-        resizeMode: 'contain'
-    },
-    socialButtons:
-    {
-        paddingBottom: 30,
-        flexDirection: "row",
-        justifyContent: "space-evenly"
-    },
-    activityIndicator: {
-        flex: 1,
-        zIndex: 9999,
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        backgroundColor: "#00000090"
-    }
-});

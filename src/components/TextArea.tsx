@@ -2,6 +2,7 @@ import i18n from '../i18n/_i18n';
 import { useStore } from '../store';
 import { color } from '../assets/colors';
 import React, { useState, useEffect } from 'react';
+import useColorScheme from '../assets/useColorScheme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Dimensions, Keyboard, Image, InputAccessoryView } from 'react-native';
 
@@ -19,8 +20,94 @@ const TextArea = ({ navigation, route }) => {
     const [text, setText] = useState('');
     const [keyboardHeight, setKeyboardHeight] = useState(0);
     const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
-
-
+    const colorScheme = useColorScheme();
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            padding: 20,
+            backgroundColor: color("color6"),
+        },
+        title: {
+            fontSize: 18,
+            fontWeight: "bold",
+            color: color("color8")
+        },
+        newCommentView: {
+            flexDirection: "row",
+        },
+        imageView: {
+            width: 60,
+            marginTop: 24
+        },
+        profilePicture: {
+            width: 46,
+            height: 46,
+            borderRadius: 20,
+            backgroundColor: color('color5')
+        },
+        btnNewComment: {
+            height: 47.5,
+            maxWidth: "100%",
+            borderRadius: 12.5,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: color("color3"),
+        },
+        txtNewComment: {
+            fontSize: 15,
+            fontWeight: "500",
+            textAlign: "center",
+            color: color("buttonText"),
+        },
+        back: {
+            top: 16,
+            right: 16,
+            width: 36,
+            zIndex: 2,
+            height: 36,
+            padding: 5,
+            borderRadius: 36,
+            alignItems: "center",
+            position: "absolute",
+            justifyContent: "center",
+            backgroundColor: color("color5"),
+        },
+        txtComment: {
+            width: "95%",
+            marginTop: 20,
+            paddingLeft: 0,
+            paddingBottom: 10,
+            marginBottom: 10,
+            textAlignVertical: "bottom",
+            color: color("color8")
+        },
+        missingCharView: {
+            right: 10,
+            opacity: .5,
+            width: 27.5,
+            padding: 7.5,
+            height: 27.5,
+            borderRadius: 27.5,
+            position: "absolute",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: color("color5")
+        },
+        txtMissingChar: {
+            fontSize: 11,
+            fontWeight: "500",
+        },
+        parityIconView: {
+            left: 10,
+            position: "absolute",
+        },
+        parityIcon: {
+            width: 27.5,
+            height: 27.5,
+            borderRadius: 27.5
+        }
+    });
+    
     useEffect(() => {
         const openKeyboard = Keyboard.addListener('keyboardDidShow', (e) => {
             setKeyboardHeight(e.endCoordinates.height);
@@ -40,7 +127,6 @@ const TextArea = ({ navigation, route }) => {
     useEffect(() => {
         setText(text.trimStart().replace('\n\n\n', '\n\n'));
     }, [text]);
-
 
     return (
         <>
@@ -87,90 +173,3 @@ const TextArea = ({ navigation, route }) => {
 };
 
 export default TextArea;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: color("color6"),
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: "bold",
-        color: color("color8")
-    },
-    newCommentView: {
-        flexDirection: "row",
-    },
-    imageView: {
-        width: 60,
-        marginTop: 24
-    },
-    profilePicture: {
-        width: 46,
-        height: 46,
-        borderRadius: 20,
-        backgroundColor: color('color5')
-    },
-    btnNewComment: {
-        height: 47.5,
-        maxWidth: "100%",
-        borderRadius: 12.5,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: color("color3"),
-    },
-    txtNewComment: {
-        fontSize: 15,
-        fontWeight: "500",
-        textAlign: "center",
-        color: color("buttonText"),
-    },
-    back: {
-        top: 16,
-        right: 16,
-        width: 36,
-        zIndex: 2,
-        height: 36,
-        padding: 5,
-        borderRadius: 36,
-        alignItems: "center",
-        position: "absolute",
-        justifyContent: "center",
-        backgroundColor: color("color5"),
-    },
-    txtComment: {
-        width: "95%",
-        marginTop: 20,
-        paddingLeft: 0,
-        paddingBottom: 10,
-        marginBottom: 10,
-        textAlignVertical: "bottom",
-        color: color("color8")
-    },
-    missingCharView: {
-        right: 10,
-        opacity: .5,
-        width: 27.5,
-        padding: 7.5,
-        height: 27.5,
-        borderRadius: 27.5,
-        position: "absolute",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: color("color5")
-    },
-    txtMissingChar: {
-        fontSize: 11,
-        fontWeight: "500",
-    },
-    parityIconView: {
-        left: 10,
-        position: "absolute",
-    },
-    parityIcon: {
-        width: 27.5,
-        height: 27.5,
-        borderRadius: 27.5
-    }
-});

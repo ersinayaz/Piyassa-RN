@@ -5,6 +5,7 @@ import { useFirestore } from '../db';
 import { color } from '../assets/colors';
 import ParityCard from '../components/ParityCard';
 import CommentItem from '../components/CommentItem';
+import useColorScheme from '../assets/useColorScheme';
 import analytics from '@react-native-firebase/analytics';
 import * as StoreReview from 'react-native-store-review';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,7 +25,79 @@ const ParityDetailScreen = ({ navigation, route }) => {
   const [newComments, setNewComments] = useState([]);
   const [newCommentsCount, setNewCommentsCount] = useState(0);
   const [newCommentsVisible, setNewCommentsVisible] = useState(false);
-
+  const colorScheme = useColorScheme();
+  const styles = StyleSheet.create({
+    headerButton: {
+      backgroundColor: color("color2"),
+      borderRadius: 5,
+      paddingVertical: 7.5,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    headerButtonText: {
+      color: color("color6"),
+      fontSize: 12,
+      fontWeight: "bold",
+    },
+    background: {
+      flex: 1,
+      backgroundColor: color("color2"),
+    },
+    container: {
+      flex: 1,
+      borderTopLeftRadius: 24,
+      borderTopRightRadius: 24,
+      paddingVertical: 5,
+      backgroundColor: color("color6"),
+    },
+    flatlist: {
+      flex: 1,
+    },
+    itemSeparator: {
+      height: .7,
+      backgroundColor: color("color5"),
+    },
+    btnNewComment: {
+      right: 20,
+      width: 50,
+      bottom: 20,
+      height: 50,
+      borderRadius: 25,
+      position: "absolute",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: color("color8")
+    },
+    loading: {
+      position: "absolute",
+      top: 73.5,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: color("color6"),
+      opacity: 9,
+      zIndex: 99999,
+      borderTopLeftRadius: 24,
+      borderTopRightRadius: 24,
+    },
+    header: {
+      height: 50,
+      borderTopWidth: .7,
+      paddingHorizontal: 20,
+      borderBottomWidth: .7,
+      justifyContent: "center",
+      borderTopColor: color("color5"),
+      borderBottomColor: color("color5")
+    },
+    headerTitle: {
+      fontSize: 14,
+      fontWeight: "bold",
+      color: color("color8")
+    },
+  });
+  
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
@@ -276,75 +349,3 @@ const ParityDetailScreen = ({ navigation, route }) => {
 };
 
 export default ParityDetailScreen;
-
-const styles = StyleSheet.create({
-  headerButton: {
-    backgroundColor: color("color2"),
-    borderRadius: 5,
-    paddingVertical: 7.5,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerButtonText: {
-    color: color("color6"),
-    fontSize: 12,
-    fontWeight: "bold",
-  },
-  background: {
-    flex: 1,
-    backgroundColor: color("color2"),
-  },
-  container: {
-    flex: 1,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingVertical: 5,
-    backgroundColor: color("color6"),
-  },
-  flatlist: {
-    flex: 1,
-  },
-  itemSeparator: {
-    height: .7,
-    backgroundColor: color("color5"),
-  },
-  btnNewComment: {
-    right: 20,
-    width: 50,
-    bottom: 20,
-    height: 50,
-    borderRadius: 25,
-    position: "absolute",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: color("color8")
-  },
-  loading: {
-    position: "absolute",
-    top: 73.5,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: color("color6"),
-    opacity: 9,
-    zIndex: 99999,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-  },
-  header: {
-    height: 50,
-    borderTopWidth: .7,
-    paddingHorizontal: 20,
-    borderBottomWidth: .7,
-    justifyContent: "center",
-    borderTopColor: color("color5"),
-    borderBottomColor: color("color5")
-  },
-  headerTitle: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: color("color8")
-  },
-});

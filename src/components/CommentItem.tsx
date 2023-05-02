@@ -10,6 +10,7 @@ import { color } from '../assets/colors';
 import FeedbackModal from './FeedbackModal';
 import ParityCard from '../components/ParityCard';
 import { comments } from '../db/FirestoreDatabase';
+import useColorScheme from '../assets/useColorScheme';
 import analytics from '@react-native-firebase/analytics';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, { useState, useEffect, useRef } from 'react';
@@ -33,7 +34,80 @@ const CommentItem = (props: CommentItemProps) => {
     const { userStore, commentStore } = useStore();
     const { reports, users } = useFirestore();
     const [isLiked, setIsLiked] = useState(userStore.isLikedComment(data.id));
-
+    const colorScheme = useColorScheme();
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            paddingVertical: 10,
+            paddingHorizontal: 20
+        },
+        header: {
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        userImage: {
+            width: 46,
+            height: 46,
+            borderRadius: 20
+        },
+        headerCenter: {
+            flex: 1,
+            marginLeft: 20
+        },
+        userName: {
+            fontSize: 15,
+            fontWeight: 'bold',
+            color: color("color8")
+        },
+        timeAgo: {
+            fontSize: 12,
+            color: color("color7"),
+        },
+        headerRight: {
+            right: -10,
+        },
+        btnAction: {
+        },
+        body: {
+            marginVertical: 5,
+        },
+        txtBody: {
+            color: color("color8")
+        },
+        buttons: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+        },
+        btnLike: {
+            minWidth: 75,
+            borderWidth: 1,
+            borderRadius: 7.5,
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            borderColor: color("color3")
+        },
+        btnLiked: {
+            backgroundColor: color("color3"),
+        },
+        txtLikeCount: {
+            fontSize: 14,
+            marginLeft: 5,
+            fontWeight: "bold"
+        },
+        profileScreenInfoContainer: {
+            height: 36,
+            paddingLeft: 10,
+            marginBottom: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: color("color5"),
+            borderRadius: 10,
+        }
+    });
 
     useEffect(() => {
         reaction(() => userStore.me?.commentsCount, async (data, prev) => {
@@ -239,77 +313,3 @@ const CommentItem = (props: CommentItemProps) => {
 };
 
 export default CommentItem;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingVertical: 10,
-        paddingHorizontal: 20
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    userImage: {
-        width: 46,
-        height: 46,
-        borderRadius: 20
-    },
-    headerCenter: {
-        flex: 1,
-        marginLeft: 20
-    },
-    userName: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: color("color8")
-    },
-    timeAgo: {
-        fontSize: 12,
-        color: color("color7"),
-    },
-    headerRight: {
-        right: -10,
-    },
-    btnAction: {
-    },
-    body: {
-        marginVertical: 5,
-    },
-    txtBody: {
-        color: color("color8")
-    },
-    buttons: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-    },
-    btnLike: {
-        minWidth: 75,
-        borderWidth: 1,
-        borderRadius: 7.5,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        borderColor: color("color3")
-    },
-    btnLiked: {
-        backgroundColor: color("color3"),
-    },
-    txtLikeCount: {
-        fontSize: 14,
-        marginLeft: 5,
-        fontWeight: "bold"
-    },
-    profileScreenInfoContainer: {
-        height: 36,
-        paddingLeft: 10,
-        marginBottom: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: color("color5"),
-        borderRadius: 10,
-    }
-});

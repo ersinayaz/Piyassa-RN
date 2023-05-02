@@ -4,6 +4,7 @@ import { color } from './src/assets/colors';
 import { StoreProvider } from './src/store';
 import { FirebaseProvider } from './src/db/index';
 import firebase from '@react-native-firebase/app';
+import useColorScheme from './src/assets/useColorScheme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Image, LogBox, StyleSheet, Appearance, StatusBar } from 'react-native';
 
@@ -30,6 +31,7 @@ const Tab = createBottomTabNavigator();
 
 function App(): JSX.Element {
   LogBox.ignoreAllLogs();
+  const colorScheme = useColorScheme();
 
   const TabNavigator = () => {
     return (

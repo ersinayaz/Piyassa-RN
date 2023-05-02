@@ -3,6 +3,7 @@ import { useStore } from '../store';
 import { useFirestore } from '../db';
 import React, { useState } from 'react';
 import { color } from '../assets/colors';
+import useColorScheme from '../assets/useColorScheme';
 import analytics from '@react-native-firebase/analytics';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
@@ -11,6 +12,37 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
     const { userStore } = useStore();
     const { relationships, users } = useFirestore();
     const [isFollowings, setIsFollowings] = useState(userStore.isFollowing(user.id));
+    const colorScheme = useColorScheme();
+    const styles = StyleSheet.create({
+        container: {
+            flexDirection: 'row',
+            paddingHorizontal: 20,
+        },
+        userImage: {
+            width: 92,
+            height: 92,
+            borderRadius: 40
+        },
+        userName: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: color("color8")
+        },
+        btnNotification: {
+            marginTop: 5,
+            borderRadius: 7.5,
+            paddingVertical: 10,
+            flexDirection: "row",
+            alignItems: "center",
+            paddingHorizontal: 20,
+            justifyContent: "center",
+        },
+        btnNotificationText: {
+            marginLeft: 5,
+            color: color("color8")
+        }
+    
+    });
 
     const followOrUnfollow = async () => {
         if (!userStore.me) {
@@ -21,7 +53,6 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
 
         !isFollowings ? follow(anotherUser) : unfollow(anotherUser);
     }
-
 
     const follow = async (anotherUser) => {
 
@@ -104,34 +135,3 @@ const UserModal = ({ navigation, user, parity, modalRef }) => {
 };
 
 export default UserModal;
-
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        paddingHorizontal: 20,
-    },
-    userImage: {
-        width: 92,
-        height: 92,
-        borderRadius: 40
-    },
-    userName: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: color("color8")
-    },
-    btnNotification: {
-        marginTop: 5,
-        borderRadius: 7.5,
-        paddingVertical: 10,
-        flexDirection: "row",
-        alignItems: "center",
-        paddingHorizontal: 20,
-        justifyContent: "center",
-    },
-    btnNotificationText: {
-        marginLeft: 5,
-        color: color("color8")
-    }
-
-});

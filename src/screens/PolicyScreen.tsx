@@ -1,6 +1,7 @@
 import { color } from '../assets/colors';
 import RenderHtml from 'react-native-render-html';
 import React, { useState, useEffect } from 'react';
+import useColorScheme from '../assets/useColorScheme';
 import { staticContent } from '../assets/data/staticContent';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Image, Dimensions } from 'react-native';
@@ -9,6 +10,47 @@ const PolicyScreen = ({ navigation, route }) => {
     const { title, type } = route.params;
     const width = Dimensions.get('window').width;
     const [source, setSource] = useState({ html: type == 1 ? staticContent.privactPolicy : type == 2 ? staticContent.termsOfUse : staticContent.aboutUs });
+    const colorScheme = useColorScheme();
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: color("color6")
+        },
+        headerTitle: {
+            fontSize: 17,
+            color: color("color4"),
+        },
+        headerLeft: {
+            left: 16,
+            zIndex: 2,
+            width: 36,
+            height: 36,
+            marginTop: -10,
+            borderRadius: 5,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: color("color1")
+        },
+        imageView: {
+            width: "100%",
+            height: 120,
+            paddingLeft: 75,
+            paddingRight: 75,
+            marginTop: -20,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: color("color2")
+        },
+        contentArea: {
+            flex: 1,
+            padding: 20,
+        },
+        title: {
+            fontSize: 20,
+            fontWeight: "bold",
+            color: color("color8")
+        },
+    });
 
     useEffect(() => {
         navigation.setOptions({
@@ -43,44 +85,3 @@ const PolicyScreen = ({ navigation, route }) => {
 };
 
 export default PolicyScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: color("color6")
-    },
-    headerTitle: {
-        fontSize: 17,
-        color: color("color4"),
-    },
-    headerLeft: {
-        left: 16,
-        zIndex: 2,
-        width: 36,
-        height: 36,
-        marginTop: -10,
-        borderRadius: 5,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: color("color1")
-    },
-    imageView: {
-        width: "100%",
-        height: 120,
-        paddingLeft: 75,
-        paddingRight: 75,
-        marginTop: -20,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: color("color2")
-    },
-    contentArea: {
-        flex: 1,
-        padding: 20,
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: color("color8")
-    },
-});

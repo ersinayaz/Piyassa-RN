@@ -27,11 +27,14 @@ const Colors = {
     }
 };
 
-function color(element) {
-    if (Appearance.getColorScheme() === 'dark') {
-        return Colors.dark[element];
-    }
-    return Colors.light[element]
+var colorScheme = Appearance.getColorScheme();
+
+Appearance.addChangeListener(({ colorScheme }) => {
+    colorScheme = colorScheme;
+});
+
+function color(name) {
+    return Colors[Appearance.getColorScheme()][name];
 }
 
-export { Colors, color }
+export { Colors, color };

@@ -3,6 +3,7 @@ import { useStore } from '../store';
 import { useFirestore } from '../db';
 import { color } from '../assets/colors';
 import auth from '@react-native-firebase/auth';
+import useColorScheme from '../assets/useColorScheme';
 import FeedbackModal from '../components/FeedbackModal';
 import analytics from '@react-native-firebase/analytics';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,6 +19,52 @@ const SettingsScreen = ({ navigation, route }) => {
     const PLAY_STORE_LINK = `market://details?id=tr.com.piyassa`;
     const STORE_LINK = Platform.select({ ios: APP_STORE_LINK, android: PLAY_STORE_LINK });
     const feedbackModalRef = useRef<BottomDrawerMethods>(null);
+    const colorScheme = useColorScheme();
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            paddingVertical: 5,
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            justifyContent: 'center',
+            backgroundColor: color("color6"),
+        },
+        item: {
+            height: 70,
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            borderBottomWidth: .5,
+            justifyContent: "space-between",
+            borderBottomColor: color("color5"),
+        },
+        title: {
+            flex: 1,
+            fontSize: 14,
+            marginLeft: 15,
+            fontWeight: "500"
+        },
+        logout: {
+            borderTopWidth: .5,
+            borderBottomWidth: 0,
+            borderTopColor: color("color5"),
+        },
+        headerTitle: {
+            fontSize: 17,
+            color: color("color4"),
+        },
+        headerLeft: {
+            left: 16,
+            zIndex: 2,
+            width: 36,
+            height: 36,
+            marginTop: -10,
+            borderRadius: 5,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: color("color1")
+        },
+    });    
 
     useEffect(() => {
         navigation.setOptions({
@@ -109,49 +156,3 @@ const SettingsScreen = ({ navigation, route }) => {
 };
 
 export default SettingsScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingVertical: 5,
-        alignItems: 'center',
-        paddingHorizontal: 20,
-        justifyContent: 'center',
-        backgroundColor: color("color6"),
-    },
-    item: {
-        height: 70,
-        width: "100%",
-        flexDirection: "row",
-        alignItems: "center",
-        borderBottomWidth: .5,
-        justifyContent: "space-between",
-        borderBottomColor: color("color5"),
-    },
-    title: {
-        flex: 1,
-        fontSize: 14,
-        marginLeft: 15,
-        fontWeight: "500"
-    },
-    logout: {
-        borderTopWidth: .5,
-        borderBottomWidth: 0,
-        borderTopColor: color("color5"),
-    },
-    headerTitle: {
-        fontSize: 17,
-        color: color("color4"),
-    },
-    headerLeft: {
-        left: 16,
-        zIndex: 2,
-        width: 36,
-        height: 36,
-        marginTop: -10,
-        borderRadius: 5,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: color("color1")
-    },
-});

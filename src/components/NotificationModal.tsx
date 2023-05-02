@@ -3,6 +3,7 @@ import { useStore } from '../store';
 import { useFirestore } from '../db';
 import { color } from '../assets/colors';
 import Lottie from 'lottie-react-native';
+import useColorScheme from '../assets/useColorScheme';
 import messaging from '@react-native-firebase/messaging';
 import analytics from '@react-native-firebase/analytics';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -11,7 +12,55 @@ import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 const NotificationModal = ({ modalRef }) => {
     const { userStore } = useStore();
     const { users } = useFirestore();
-
+    const colorScheme = useColorScheme();
+    const styles = StyleSheet.create({
+        container: {
+            alignItems: "center",
+            paddingHorizontal: 40,
+            justifyContent: "center"
+        },
+        back: {
+            top: 0,
+            right: 20,
+            width: 36,
+            zIndex: 2,
+            height: 36,
+            padding: 5,
+            borderRadius: 36,
+            alignItems: "center",
+            position: "absolute",
+            justifyContent: "center",
+            backgroundColor: color("color5"),
+        },
+        btn: {
+            padding: 15,
+            marginTop: 20,
+            borderRadius: 10,
+            backgroundColor: color("color3")
+        },
+        btnText: {
+            fontWeight: "bold",
+            textAlign: "center",
+            color: color("color6")
+        },
+        modalTitle: {
+            fontSize: 16,
+            fontWeight: "bold",
+            textAlign: "center",
+            color: color("color8"),
+        },
+        modalDescription: {
+            fontSize: 14,
+            marginTop: 10,
+            textAlign: "center",
+            color: color("color8"),
+        },
+        lottie: {
+            width: "100%",
+            height: 150,
+        }
+    });
+    
     const notificationPermission = async () => {
         modalRef.current.close();
         const messagingStatus = await messaging().requestPermission({
@@ -58,51 +107,3 @@ const NotificationModal = ({ modalRef }) => {
 };
 
 export default NotificationModal;
-
-const styles = StyleSheet.create({
-    container: {
-        alignItems: "center",
-        paddingHorizontal: 40,
-        justifyContent: "center"
-    },
-    back: {
-        top: 0,
-        right: 20,
-        width: 36,
-        zIndex: 2,
-        height: 36,
-        padding: 5,
-        borderRadius: 36,
-        alignItems: "center",
-        position: "absolute",
-        justifyContent: "center",
-        backgroundColor: color("color5"),
-    },
-    btn: {
-        padding: 15,
-        marginTop: 20,
-        borderRadius: 10,
-        backgroundColor: color("color3")
-    },
-    btnText: {
-        fontWeight: "bold",
-        textAlign: "center",
-        color: color("color6")
-    },
-    modalTitle: {
-        fontSize: 16,
-        fontWeight: "bold",
-        textAlign: "center",
-        color: color("color8"),
-    },
-    modalDescription: {
-        fontSize: 14,
-        marginTop: 10,
-        textAlign: "center",
-        color: color("color8"),
-    },
-    lottie: {
-        width: "100%",
-        height: 150,
-    }
-});

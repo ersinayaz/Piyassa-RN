@@ -7,15 +7,30 @@ import { color } from '../assets/colors';
 import { DeviceData, Parities } from '../models';
 import DeviceInfo from 'react-native-device-info';
 import React, { useState, useEffect } from 'react';
+import useColorScheme from '../assets/useColorScheme';
 import analytics from '@react-native-firebase/analytics';
 import { View, StyleSheet, Image, AppState } from 'react-native';
 
 
 const SplashScreen = observer(({ navigation }) => {
-
   const { deviceStore, userStore } = useStore();
   const { parities, relationships } = useFirestore();
   const [initialData, setInitialData] = useState(null);
+  const colorScheme = useColorScheme();
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: color('color1'),
+    },
+    image: {
+      flex: 2,
+      width: 254,
+      height: 68,
+      resizeMode: 'contain',
+    }
+  });
 
   useEffect(() => {
     const init = async () => {
@@ -135,18 +150,3 @@ const SplashScreen = observer(({ navigation }) => {
 });
 
 export default SplashScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: color('color1'),
-  },
-  image: {
-    flex: 2,
-    width: 254,
-    height: 68,
-    resizeMode: 'contain',
-  }
-});
