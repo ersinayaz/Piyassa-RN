@@ -14,7 +14,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { appleAuth } from '@invertase/react-native-apple-authentication';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Image, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Image, Platform, Appearance, ImageBackground } from 'react-native';
 GoogleSignin.configure({ webClientId: '478607830477-79q1nbj9nqdcvhqpi1i8ll7jq32g3uu0.apps.googleusercontent.com', scopes: ['email', 'profile'] });
 var facebookAccessToken = '';
 
@@ -23,6 +23,7 @@ const LoginScreen = ({ navigation, route }) => {
     const { userStore, deviceStore } = useStore();
     const { users } = useFirestore();
     const colorScheme = useColorScheme();
+    const darkMode = Appearance.getColorScheme() === 'dark';
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -31,7 +32,7 @@ const LoginScreen = ({ navigation, route }) => {
             backgroundColor: color('color6'),
         },
         image: {
-            flex: 2,
+            flex: 1,
             width: "100%",
             resizeMode: 'contain',
         },
@@ -98,7 +99,11 @@ const LoginScreen = ({ navigation, route }) => {
     const goBack = () => {
         if (route.params?.from != null) {
             if (route.params?.from == "Profile" && userStore.me == null) {
-                navigation.navigate("Home");
+                try {
+                    navigation.navigate("Home");
+                } catch (error) {
+                    console.error("er");
+                }
                 return;
             }
             navigation.navigate(route.params?.from, { data: route.params.parity });
@@ -311,7 +316,7 @@ const LoginScreen = ({ navigation, route }) => {
         user.lastProvider = provider;
         user.updatedAt = Date.now();
         appVersion: packageJson.version;
-        
+
         user.notificationToken = await getNotificationToken();
         user.lastLoginIp = deviceStore.ip.publicIP;
         switch (provider) {
@@ -335,11 +340,11 @@ const LoginScreen = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
-            <Image source={require('../assets/images/logo/header-login.png')} style={styles.logo} />
+            <Image source={darkMode ? require('../assets/images/logo/header-default.png') : require('../assets/images/logo/header-login.png')} style={styles.logo} />
             <TouchableOpacity style={styles.back} onPress={goBack}>
                 <Ionicons name="close" size={16} color={color('color8')} />
             </TouchableOpacity>
-            <Image style={[styles.image]} source={require('../assets/images/general/login-image.png')} />
+            <Image style={[styles.image]} source={darkMode ? require('../assets/images/general/login-image-dark.png') : require('../assets/images/general/login-image.png')} />
             <View style={styles.form}>
                 <Text style={[styles.text, styles.txtTitle]}>{i18n.t("login_txt_title")}</Text>
                 <Text style={[styles.text, styles.txtDescription]}>{i18n.t("login_txt_description")}</Text>
