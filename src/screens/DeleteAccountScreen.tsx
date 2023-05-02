@@ -12,7 +12,7 @@ import { Text, View, StyleSheet, TouchableOpacity, Image, Alert } from 'react-na
 
 const DeleteAccountScreen = ({ navigation, route }) => {
     const { userStore, commentStore } = useStore();
-    const { users, comments } = useFirestore();
+    const { users, comments, deletedUsers } = useFirestore();
     const colorScheme = useColorScheme();
     const styles = StyleSheet.create({
         informationView: {
@@ -119,7 +119,6 @@ const DeleteAccountScreen = ({ navigation, route }) => {
         },
     });
 
-
     useEffect(() => {
         navigation.setOptions({
             headerTitle: () => (<><Text style={styles.headerTitle}>{i18n.t("lbl_settings_account_delete")}</Text></>),
@@ -153,6 +152,7 @@ const DeleteAccountScreen = ({ navigation, route }) => {
                             os: userStore.me?.deviceData.os
                         });
                         const userId = userStore.me.id;
+                        await deletedUsers.create(userStore.me);
                         await users.delete(userId);
                         await comments.deleteByUserId(userId);
                         commentStore.dumpUserComments([]);

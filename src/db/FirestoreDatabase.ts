@@ -186,7 +186,9 @@ export const reports = new FirestoreDatabase<Reports>("reports");
 export const parities = new FirestoreDatabase<Parity>("parities");
 export const comments = new FirestoreDatabase<Comment>("comments");
 export const feedbacks = new FirestoreDatabase<Feedback>("feedbacks");
+export const deletedUsers = new FirestoreDatabase<User>("deletedUsers");
 export const relationships = new FirestoreDatabase<Relationship>("relationships");
+
 
 
 export type Firestore = {
@@ -195,6 +197,7 @@ export type Firestore = {
     parities: FirestoreDatabase<Parity>;
     comments: FirestoreDatabase<Comment>;
     feedbacks: FirestoreDatabase<Feedback>;
+    deletedUsers: FirestoreDatabase<User>;
     relationships: FirestoreDatabase<Relationship>;
 }
 
@@ -204,6 +207,7 @@ const firebaseFirestore: Firestore = {
     comments,
     parities,
     feedbacks,
+    deletedUsers,
     relationships
 };
 
