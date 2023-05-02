@@ -100,6 +100,7 @@ const LoginScreen = ({ navigation, route }) => {
         if (route.params?.from != null) {
             if (route.params?.from == "Profile" && userStore.me == null) {
                 try {
+                    navigation.reset({ index: 0, routes: [{ name: 'Tab'}] });
                     navigation.navigate("Home");
                 } catch (error) {
                     console.error("er");
