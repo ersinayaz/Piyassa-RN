@@ -150,6 +150,15 @@ const ProfileScreen = ({ navigation, route }) => {
     }
 
     useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            if (!userStore.me)
+            navigation.navigate('Login', { from: 'Profile' });
+        });
+        return unsubscribe;
+    }, [navigation]);
+
+    useEffect(() => {
+
         const updateHeader = async () => {
             navigation.setOptions({
                 headerLeft: () => (<></>),
@@ -181,11 +190,11 @@ const ProfileScreen = ({ navigation, route }) => {
 
     useEffect(() => {
         const reaction1 = reaction(() => feedStore.userComments, (feed, prev) => {
-        //   if (JSON.stringify(feed) === JSON.stringify(prev)) return;
-          setCommentList(feed);
+            //   if (JSON.stringify(feed) === JSON.stringify(prev)) return;
+            setCommentList(feed);
         });
         return () => reaction1();
-      }, [feedStore.userComments]);
+    }, [feedStore.userComments]);
 
     // useEffect(() => {
     //     const unsubscribe = navigation.addListener('focus', () => {
