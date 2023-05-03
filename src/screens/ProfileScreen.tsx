@@ -14,11 +14,11 @@ import { Text, View, StyleSheet, TouchableOpacity, Image, FlatList } from 'react
 moment.locale('tr');
 
 const ProfileScreen = ({ navigation, route }) => {
-    const { userStore, commentStore } = useStore();
+    const { userStore, commentStore, feedStore } = useStore();
     const { comments } = useFirestore();
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [commentList, setCommentList] = useState(commentStore.userComments);
+    const [commentList, setCommentList] = useState(feedStore.userComments || []);
     const colorScheme = useColorScheme();
     const styles = StyleSheet.create({
         container: {
@@ -126,58 +126,117 @@ const ProfileScreen = ({ navigation, route }) => {
             backgroundColor: color("color5"),
         },
     });
-    
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        const response = await comments.getCommentsByUserId(userStore.me.id);
+        if (response) {
+            if (JSON.stringify(response) !== JSON.stringify(feedStore.userComments)) {
+                await feedStore.dumpUserComments(response);
+                await feedStore.getUserComments();
+                setCommentList(response);
+            }
+        }
+        setRefreshing(false);
+    }
+
+    const onEndReached = async () => {
+        if (feedStore.userComments.length > 0) {
+            const lastComment = commentList[commentList.length - 1];
+            const lastCommentCreatedAt = lastComment ? lastComment.createdAt : null;
+            const response = await comments.getCommentsByUserId(userStore.me.id, lastCommentCreatedAt);
+            setCommentList([...commentList, ...response]);
+        }
+    }
 
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            if (!userStore.me)
-                navigation.navigate('Login', { from: 'Profile' });
-        });
-
-        navigation.setOptions({
-            headerLeft: () => (<></>),
-            headerTitle: () => (<><Text style={styles.headerTitle}>{i18n.t("txt_myProfile")}</Text></>),
-            headerRight: () => (
-                <>
-                    <TouchableOpacity onPress={() => { navigation.navigate("Settings"); }} style={styles.headerRight}>
-                        <Ionicons color={color("buttonText")} name="ios-settings" size={20} />
-                    </TouchableOpacity>
-                </>)
-        });
-
-        // reaction(() => userStore.me?.commentsCount, async (data, prev) => {
-        //     if (data != prev) {
-        //         comments.getCommentsByUserId(userStore.me.id).then((data) => {
-        //             setCommentList(data);
-        //             setLoading(false);
-        //         });
-        //     }
-        // });
-
-        // commentStore.getUserComments().then((data) => {
-        //     setCommentList(data);
-        // });
-
-        // comments.getCommentsByUserId(userStore.me.id).then((data) => {
-        //     commentStore.dumpUserComments(data);
-        // });
-
-        reaction(() => userStore.me?.followersCount, async (data, prev) => {
-            setCommentList(commentStore.userComments);
-        });
-
-
-        reaction(() => commentStore.userComments, async (data, prev) => {
-            setCommentList(data);
-        });
-
-        return () => {
-            try {
-                unsubscribe.remove();
-            } catch (error) { }
+        const updateHeader = async () => {
+            navigation.setOptions({
+                headerLeft: () => (<></>),
+                headerTitle: () => (<><Text style={styles.headerTitle}>{i18n.t("txt_myProfile")}</Text></>),
+                headerRight: () => (
+                    <>
+                        <TouchableOpacity onPress={() => { navigation.navigate("Settings"); }} style={styles.headerRight}>
+                            <Ionicons color={color("buttonText")} name="ios-settings" size={20} />
+                        </TouchableOpacity>
+                    </>)
+            });
         }
 
+        updateHeader();
+
+        const fetchData = async () => {
+            const response = await comments.getCommentsByUserId(userStore.me.id);
+            if (response) {
+                if (JSON.stringify(response) !== JSON.stringify(feedStore.userComments)) {
+                    await feedStore.dumpUserComments(response)
+                    await feedStore.getUserComments();
+                    setCommentList(response);
+                }
+            }
+        }
+
+        fetchData();
     }, []);
+
+    useEffect(() => {
+        const reaction1 = reaction(() => feedStore.userComments, (feed, prev) => {
+        //   if (JSON.stringify(feed) === JSON.stringify(prev)) return;
+          setCommentList(feed);
+        });
+        return () => reaction1();
+      }, [feedStore.userComments]);
+
+    // useEffect(() => {
+    //     const unsubscribe = navigation.addListener('focus', () => {
+    //         if (!userStore.me)
+    //             navigation.navigate('Login', { from: 'Profile' });
+    //     });
+
+    //     navigation.setOptions({
+    //         headerLeft: () => (<></>),
+    //         headerTitle: () => (<><Text style={styles.headerTitle}>{i18n.t("txt_myProfile")}</Text></>),
+    //         headerRight: () => (
+    //             <>
+    //                 <TouchableOpacity onPress={() => { navigation.navigate("Settings"); }} style={styles.headerRight}>
+    //                     <Ionicons color={color("buttonText")} name="ios-settings" size={20} />
+    //                 </TouchableOpacity>
+    //             </>)
+    //     });
+
+    //     // reaction(() => userStore.me?.commentsCount, async (data, prev) => {
+    //     //     if (data != prev) {
+    //     //         comments.getCommentsByUserId(userStore.me.id).then((data) => {
+    //     //             setCommentList(data);
+    //     //             setLoading(false);
+    //     //         });
+    //     //     }
+    //     // });
+
+    //     // commentStore.getUserComments().then((data) => {
+    //     //     setCommentList(data);
+    //     // });
+
+    //     // comments.getCommentsByUserId(userStore.me.id).then((data) => {
+    //     //     commentStore.dumpUserComments(data);
+    //     // });
+
+    //     reaction(() => userStore.me?.followersCount, async (data, prev) => {
+    //         setCommentList(commentStore.userComments);
+    //     });
+
+
+    //     reaction(() => commentStore.userComments, async (data, prev) => {
+    //         setCommentList(data);
+    //     });
+
+    //     return () => {
+    //         try {
+    //             unsubscribe.remove();
+    //         } catch (error) { }
+    //     }
+
+    // }, []);
 
 
 
@@ -192,17 +251,18 @@ const ProfileScreen = ({ navigation, route }) => {
     //     // }
     // }, [userStore.me]);
 
-    useEffect(() => {
-        const getLiveComments = async () => {
-            try {
-                const data = await comments.getCommentsByUserId(userStore.me.id);
-                await commentStore.dumpUserComments(data);
-                setCommentList([...data]);
-            } catch (error) { }
-        }
+    // useEffect(() => {
+    //     const getLiveComments = async () => {
+    //         try {
+    //             const data = await comments.getCommentsByUserId(userStore.me.id);
+    //             await commentStore.dumpUserComments(data);
+    //             setCommentList([...data]);
+    //         } catch (error) { }
+    //     }
 
-        getLiveComments();
-    }, []);
+    //     getLiveComments();
+    // }, []);
+
 
 
     const counterItem = (title, count) => {
@@ -251,7 +311,25 @@ const ProfileScreen = ({ navigation, route }) => {
                     <Text style={styles.createdAt}>{i18n.t("txt_dateOfRegistration")}: <Text style={{ fontWeight: "bold" }}>{moment(userStore.me.created).format('DD MMMM YYYY')}</Text></Text>
                 </View>
                 <View style={styles.comments}>
+
                     <FlatList
+                        data={commentList}
+                        onRefresh={onRefresh}
+                        style={styles.flatlist}
+                        refreshing={refreshing}
+                        initialNumToRender={10}
+                        onEndReached={onEndReached}
+                        onEndReachedThreshold={0.5}
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(item, index) => index.toString()}
+                        ListFooterComponent={() => (<View style={{ height: 250 }} />)}
+                        ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
+                        ListHeaderComponent={() => (<View style={styles.counter}>{counterView()}</View>)}
+                        renderItem={(data) => <CommentItem profileScreen={true} navigation={navigation} parity={data.item.parity} data={data.item} />}
+                    />
+
+                    {/* <FlatList
                         data={commentList}
                         style={styles.flatlist}
                         onEndReachedThreshold={0.5}
@@ -285,7 +363,7 @@ const ProfileScreen = ({ navigation, route }) => {
                             } catch (error) { }
                             setLoading(false)
                         }}
-                    />
+                    /> */}
                 </View>
             </View>
     );

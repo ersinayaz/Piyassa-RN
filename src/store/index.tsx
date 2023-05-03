@@ -5,17 +5,23 @@ import userStore, { UserStore } from './UserStore';
 import deviceStore, { DeviceStore } from './DeviceStore';
 import commentStore, { CommentStore } from './CommentStore';
 
+import feedStore, { FeedStore} from './FeedStore';
+
 
 type RootStore = {
   userStore: UserStore;
   deviceStore: DeviceStore;
   commentStore: CommentStore;
+
+  feedStore: FeedStore;
 }
 
 const rootStore: RootStore = {
   userStore,
   deviceStore,
   commentStore,
+
+  feedStore,
 };
 
 

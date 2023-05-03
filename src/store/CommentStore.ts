@@ -62,7 +62,7 @@ export class CommentStore {
 
         try {
             const entities = JSON.parse(comments);
-            const sorted = entities.sort((a, b) => a.createdAt - b.createdAt);
+            const sorted = entities.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
             return sorted;
         } catch (error) {
             return [];

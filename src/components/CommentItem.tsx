@@ -31,7 +31,7 @@ const CommentItem = (props: CommentItemProps) => {
     const { data, navigation, parity, profileScreen } = props;
     const userModalRef = useRef<BottomDrawerMethods>(null);
     const feedbackModalRef = useRef<BottomDrawerMethods>(null);
-    const { userStore, commentStore } = useStore();
+    const { userStore, commentStore, feedStore } = useStore();
     const { reports, users } = useFirestore();
     const [isLiked, setIsLiked] = useState(userStore.isLikedComment(data.id));
     const colorScheme = useColorScheme();
@@ -163,7 +163,10 @@ const CommentItem = (props: CommentItemProps) => {
                 }
                 await userStore.setUser(userStore.me);
                 await users.update(userStore.me.id, { commentsCount: userStore.me.commentsCount });
-                await commentStore.deleteComment(data.parity.id, data.id);
+                await feedStore.deleteComment(parity.id, data.id);
+                await feedStore.deleteUserComment(data.id);
+                await feedStore.getFeedByParityId(parity.id);
+                // await commentStore.deleteComment(data.parity.id, data.id);
             }
         }
     }
